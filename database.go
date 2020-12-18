@@ -25,10 +25,11 @@ type Links struct {
 
 // PC Info
 type PC struct {
-	PCID  int    `json:"pcId,omitempty"`
-	Name  string `json:"name,omitempty"`
-	Info  string `json:"info,omitempty"`
-	Parts []Part `json:"parts,omitempty"`
+	PCID   int     `json:"pcId,omitempty"`
+	Name   string  `json:"name,omitempty"`
+	Info   string  `json:"info,omitempty"`
+	Parts  []Part  `json:"parts,omitempty"`
+	Images []Image `json:"images,omitempty"`
 }
 
 // Image contains info of a PC image
@@ -90,13 +91,36 @@ func (database *Database) addPC(pc PC) (Links, error) {
 		}
 	}
 
-	// create links
+	// add images to image table
+	for _, image := range pc.Images {
+		query = `INSERT INTO image (pc_id, link) VALUES (?, ?);`
+		_, err = tx.Exec(query, pcID, image.Link)
+		if err != nil {
+			tx.Rollback()
+			return links, err
+		}
+	}
 
-	// add edit link
-	query = `INSERT INTO link (pc_id, permission) VALUES (?, ?);`
-	_, err = tx.Exec(query, pcID, "edit")
+	// Make and return links
+	links, err = database.createLinks(tx, pcID)
 	if err != nil {
 		tx.Rollback()
+		return links, err
+	}
+
+	tx.Commit()
+	return links, nil
+}
+
+// createLinks creates a view and edit link
+// Returns a Links, edit and view link and error
+func (database *Database) createLinks(tx *sqlx.Tx, pcID int64) (Links, error) {
+	var links Links
+
+	// add edit link
+	query := `INSERT INTO link (pc_id, permission) VALUES (?, ?);`
+	_, err := tx.Exec(query, pcID, "edit")
+	if err != nil {
 		return links, err
 	}
 
@@ -104,24 +128,18 @@ func (database *Database) addPC(pc PC) (Links, error) {
 	linkQuery := `SELECT link_id FROM link WHERE pc_id = ? AND permission = ?;`
 	err = tx.Get(&(links.EditID), linkQuery, pcID, "edit")
 	if err != nil {
-		tx.Rollback()
 		return links, err
 	}
 	// add view link
 	_, err = tx.Exec(query, pcID, "view")
 	if err != nil {
-		tx.Rollback()
 		return links, err
 	}
 	// get view link id
 	err = tx.Get(&(links.ViewID), linkQuery, pcID, "view")
 	if err != nil {
-		tx.Rollback()
 		return links, err
 	}
 
-	// return the links
-
-	tx.Commit()
 	return links, nil
 }

@@ -14,7 +14,6 @@ type Server struct {
 	db     *Database
 }
 
-// TODO ADD IMAGES!
 // createPC creates a PC and writes back new PC info
 func (server *Server) createPC(writer http.ResponseWriter, request *http.Request) {
 	var pc PC
