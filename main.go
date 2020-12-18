@@ -9,7 +9,7 @@ func main() {
 		log.Fatalf("cannot open database: %s\n", err)
 	}
 
-	server := Server{}
-	server.StartServer(":8000", database)
+	server := Server{db: database}
+	server.StartServer(":8000")
 
 }

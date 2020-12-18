@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"log"
 	"net/http"
 
@@ -13,6 +14,33 @@ type Server struct {
 	db     *Database
 }
 
+// createPC creates a PC and writes back new PC info
+func (server *Server) createPC(writer http.ResponseWriter, request *http.Request) {
+	var pc PC
+
+	decoder := json.NewDecoder(request.Body)
+	decoder.DisallowUnknownFields()
+	err := decoder.Decode(&pc)
+	if err != nil {
+		http.Error(writer, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	// Add to the db
+	links, err := server.db.addPC(pc)
+	if err != nil {
+		http.Error(writer, err.Error(), http.StatusBadRequest)
+		return
+	}
+	// Encode the new links
+	encoder := json.NewEncoder(writer)
+	err = encoder.Encode(links)
+	if err != nil {
+		http.Error(writer, err.Error(), http.StatusInternalServerError)
+		return
+	}
+}
+
 // setupRoutes sets up routes for the router
 func (server *Server) setupRoutes() {
 	if server.router == nil {
@@ -22,16 +50,9 @@ func (server *Server) setupRoutes() {
 	// API
 
 	server.router.StrictSlash(true)
-	// subrouter := server.router.PathPrefix("/api/v1").Subrouter()
+	subrouter := server.router.PathPrefix("/api/v1").Subrouter()
 	// topic
-	// subrouter.HandleFunc("/topics", server.createTopic).Methods(http.MethodPost)
-	// subrouter.HandleFunc("/topics", server.getTopics).Methods(http.MethodGet)
-	// // comment
-	// subrouter.HandleFunc("/topics/{topic_id}/comments", server.createComment).Methods(http.MethodPost)
-	// subrouter.HandleFunc("/topics/{topic_id}/comments", server.getComments).Methods(http.MethodGet)
-	// // upvote
-	// subrouter.HandleFunc("/topics/{topic_id}/comments/{comment_id}/upvotes", server.upvoteComment).Methods(http.MethodPost)
-	// subrouter.HandleFunc("/topics/{topic_id}/comments/{comment_id}/upvotes", server.getUpvotes).Methods(http.MethodGet)
+	subrouter.HandleFunc("/pcs", server.createPC).Methods(http.MethodPost)
 
 	// Website
 
@@ -48,7 +69,7 @@ func (server *Server) initializeServer() {
 }
 
 // StartServer starts the server
-func (server *Server) StartServer(addr string, database *Database) {
+func (server *Server) StartServer(addr string) {
 	// Setup routes and initialize
 	server.initializeServer()
 	// Start the server
