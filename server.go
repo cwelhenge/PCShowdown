@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/gorilla/mux"
 )
@@ -42,6 +43,58 @@ func (server *Server) createPC(writer http.ResponseWriter, request *http.Request
 	}
 }
 
+// getPCs gets all PCs
+func (server *Server) getPCS(writer http.ResponseWriter, request *http.Request) {
+	oID, err := strconv.Atoi(mux.Vars(request)["page_number"])
+	if err != nil {
+		http.Error(writer, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	limit, err := strconv.Atoi(mux.Vars(request)["limit"])
+	if err != nil {
+		http.Error(writer, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	pcs, err := server.db.getPCS(oID, limit)
+
+	if err != nil {
+		http.Error(writer, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	writer.Header().Set("Content-Type", "application/json")
+	encoder := json.NewEncoder(writer)
+	err = encoder.Encode(pcs)
+
+	if err != nil {
+		http.Error(writer, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+}
+
+// getPCs gets all PCs
+func (server *Server) getPC(writer http.ResponseWriter, request *http.Request) {
+	linkID := mux.Vars(request)["link_id"]
+
+	pc, err := server.db.getPC(linkID)
+
+	if err != nil {
+		http.Error(writer, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	writer.Header().Set("Content-Type", "application/json")
+	encoder := json.NewEncoder(writer)
+	err = encoder.Encode(pc)
+
+	if err != nil {
+		http.Error(writer, err.Error(), http.StatusInternalServerError)
+		return
+	}
+}
+
 // setupRoutes sets up routes for the router
 func (server *Server) setupRoutes() {
 	if server.router == nil {
@@ -52,8 +105,11 @@ func (server *Server) setupRoutes() {
 
 	server.router.StrictSlash(true)
 	subrouter := server.router.PathPrefix("/api/v1").Subrouter()
-	// topic
+	// PCs
 	subrouter.HandleFunc("/pcs", server.createPC).Methods(http.MethodPost)
+	// page number and how many per page
+	subrouter.HandleFunc("/pcs/{page_number}/{limit}", server.getPCS).Methods(http.MethodGet)
+	subrouter.HandleFunc("/pcs/{link_id}", server.getPC).Methods(http.MethodGet)
 
 	// Website
 

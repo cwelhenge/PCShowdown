@@ -23,30 +23,37 @@ type Links struct {
 	ViewID string `json:"viewId,omitempty" db:"link_id"`
 }
 
+// PCList to store pc name, info and view link
+type PCList struct {
+	Name   string `json:"name,omitempty" db:"name"`
+	Info   string `json:"info,omitempty" db:"info"`
+	EditID string `json:"editId,omitempty" db:"link_id"`
+}
+
 // PC Info
 type PC struct {
-	PCID   int     `json:"pcId,omitempty"`
-	Name   string  `json:"name,omitempty"`
-	Info   string  `json:"info,omitempty"`
-	Parts  []Part  `json:"parts,omitempty"`
-	Images []Image `json:"images,omitempty"`
+	PCID   int     `json:"pcId,omitempty" db:"pc_id"`
+	Name   string  `json:"name,omitempty" db:"name"`
+	Info   string  `json:"info,omitempty" db:"info"`
+	Parts  []Part  `json:"parts,omitempty" db:"parts"`
+	Images []Image `json:"images,omitempty" db:"images"`
 }
 
 // Image contains info of a PC image
 type Image struct {
-	ImageID int    `json:"imageId,omitempty"`
-	Link    string `json:"link,omitempty"`
-	PCID    int    `json:"pcId,omitempty"`
+	ImageID int    `json:"imageId,omitempty" db:"image_id"`
+	Link    string `json:"link,omitempty" db:"link"`
+	PCID    int    `json:"pcId,omitempty" db:"pc_id"`
 }
 
 // Part of a PC
 type Part struct {
-	PartID int    `json:"partId,omitempty"`
-	Type   string `json:"type,omitempty"`
-	Brand  string `json:"brand,omitempty"`
-	Model  string `json:"model,omitempty"`
-	Qty    int    `json:"qty,omitempty"`
-	PCID   int    `json:"pcId,omitempty"`
+	PartID int    `json:"partId,omitempty" db:"part_id"`
+	Type   string `json:"type,omitempty" db:"type"`
+	Brand  string `json:"brand,omitempty" db:"brand"`
+	Model  string `json:"model,omitempty" db:"model"`
+	Qty    int    `json:"qty,omitempty" db:"qty"`
+	PCID   int    `json:"pcId,omitempty" db:"pc_id"`
 }
 
 // ConnectToDB connects to the database
@@ -142,4 +149,63 @@ func (database *Database) createLinks(tx *sqlx.Tx, pcID int64) (Links, error) {
 	}
 
 	return links, nil
+}
+
+// getPCs gets all the PCs at a range
+func (database *Database) getPCS(oldID int, limit int) ([]PCList, error) {
+	var pcs []PCList
+
+	query := `SELECT name, info
+			FROM pc
+			WHERE pc_id > ?
+			ORDER BY pc_id ASC
+			LIMIT ?;`
+
+	err := database.Select(&pcs, query, oldID, limit)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return pcs, nil
+}
+
+// getPCs gets all the PCs at a range
+func (database *Database) getPC(linkID string) (PC, error) {
+	var pc PC
+
+	// get the pc name and info
+	query := `SELECT name, info FROM pc
+			 WHERE pc_id IN (SELECT pc_id
+			 FROM link WHERE link_id = ?);`
+
+	err := database.Get(&pc, query, linkID)
+
+	if err != nil {
+		return pc, err
+	}
+
+	// get all the parts
+	query = `SELECT type, brand, qty FROM part
+			 WHERE pc_id IN (SELECT pc_id
+			 FROM link WHERE link_id = ?);`
+
+	err = database.Select(&(pc.Parts), query, linkID)
+
+	if err != nil {
+		return pc, err
+	}
+
+	// get all the images
+	query = `SELECT link FROM image
+			 WHERE pc_id IN (SELECT pc_id
+			 FROM link WHERE link_id = ?);`
+
+	err = database.Select(&(pc.Images), query, linkID)
+
+	if err != nil {
+		return pc, err
+	}
+
+	return pc, nil
 }
