@@ -14,6 +14,7 @@ type Server struct {
 	db     *Database
 }
 
+// TODO ADD IMAGES!
 // createPC creates a PC and writes back new PC info
 func (server *Server) createPC(writer http.ResponseWriter, request *http.Request) {
 	var pc PC
@@ -32,7 +33,8 @@ func (server *Server) createPC(writer http.ResponseWriter, request *http.Request
 		http.Error(writer, err.Error(), http.StatusBadRequest)
 		return
 	}
-	// Encode the new links
+	// Encode the new links as json
+	writer.Header().Set("Content-Type", "application/json")
 	encoder := json.NewEncoder(writer)
 	err = encoder.Encode(links)
 	if err != nil {

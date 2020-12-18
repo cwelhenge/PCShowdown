@@ -12,33 +12,40 @@ type Database struct {
 
 // Link to a PC
 type Link struct {
-	LinkID     string `json:"link"`
-	Permission string `json:"permission"`
-	PCID       int    `json:"pcId"`
+	LinkID     string `json:"link,omitempty"`
+	Permission string `json:"permission,omitempty"`
+	PCID       int    `json:"pcId,omitempty"`
 }
 
 // Links to send back upon creation
 type Links struct {
-	EditID string `json:"editId" db:"link_id"`
-	ViewID string `json:"viewId" db:"link_id"`
+	EditID string `json:"editId,omitempty" db:"link_id"`
+	ViewID string `json:"viewId,omitempty" db:"link_id"`
 }
 
 // PC Info
 type PC struct {
-	PCID  int    `json:"pcId"`
-	Name  string `json:"name"`
-	Info  string `json:"info"`
-	Parts []Part `json:"parts"`
+	PCID  int    `json:"pcId,omitempty"`
+	Name  string `json:"name,omitempty"`
+	Info  string `json:"info,omitempty"`
+	Parts []Part `json:"parts,omitempty"`
+}
+
+// Image contains info of a PC image
+type Image struct {
+	ImageID int    `json:"imageId,omitempty"`
+	Link    string `json:"link,omitempty"`
+	PCID    int    `json:"pcId,omitempty"`
 }
 
 // Part of a PC
 type Part struct {
-	PartID int    `json:"partId"`
-	Type   string `json:"type"`
-	Brand  string `json:"brand"`
-	Model  string `json:"model"`
-	Qty    int    `json:"qty"`
-	PCID   int    `json:"pcId"`
+	PartID int    `json:"partId,omitempty"`
+	Type   string `json:"type,omitempty"`
+	Brand  string `json:"brand,omitempty"`
+	Model  string `json:"model,omitempty"`
+	Qty    int    `json:"qty,omitempty"`
+	PCID   int    `json:"pcId,omitempty"`
 }
 
 // ConnectToDB connects to the database

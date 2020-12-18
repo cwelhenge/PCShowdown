@@ -33,8 +33,19 @@ CREATE TABLE IF NOT EXISTS part(
     qty INTEGER NOT NULL,
     pc_id INTEGER NOT NULL REFERENCES pc(pc_id)
 );
+-- images of a PC
+CREATE TABLE IF NOT EXISTS image(
+    image_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    pc_id INTEGER NOT NULL REFERENCES pc(pc_id),
+    link TEXT NOT NULL
+);
+-- Creating indices
+CREATE INDEX idx_link_id ON link (link_id);
+CREATE INDEX idx_pc_id ON pc (pc_id);
 -- +goose Down
 -- SQL in this section is executed when the migration is rolled back.
+DROP INDEX IF EXISTS idx_link_id;
+DROP INDEX IF EXISTS idx_pc_id;
 DROP TABLE IF EXISTS link;
 DROP TABLE IF EXISTS part;
 DROP TABLE IF EXISTS pc;
