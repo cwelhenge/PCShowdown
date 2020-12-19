@@ -78,6 +78,7 @@ func (server *Server) getPCS(writer http.ResponseWriter, request *http.Request) 
 func (server *Server) getPC(writer http.ResponseWriter, request *http.Request) {
 	linkID := mux.Vars(request)["link_id"]
 
+	// Get PC from db
 	pc, err := server.db.getPC(linkID)
 
 	if err != nil {
@@ -85,6 +86,40 @@ func (server *Server) getPC(writer http.ResponseWriter, request *http.Request) {
 		return
 	}
 
+	// Write back the pc as json
+	writer.Header().Set("Content-Type", "application/json")
+	encoder := json.NewEncoder(writer)
+	err = encoder.Encode(pc)
+
+	if err != nil {
+		http.Error(writer, err.Error(), http.StatusInternalServerError)
+		return
+	}
+}
+
+func (server *Server) updatePC(writer http.ResponseWriter, request *http.Request) {
+	var pc PC
+
+	linkID := mux.Vars(request)["link_id"]
+
+	// get PC info from request
+	decoder := json.NewDecoder(request.Body)
+	err := decoder.Decode(&pc)
+
+	if pc.Name == "" || pc.Info == "" {
+		http.Error(writer, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	// update the pc in db
+	pc, err = server.db.updatePC(linkID, pc)
+
+	if err != nil {
+		http.Error(writer, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	// Write back the updated pc as json
 	writer.Header().Set("Content-Type", "application/json")
 	encoder := json.NewEncoder(writer)
 	err = encoder.Encode(pc)
@@ -107,9 +142,12 @@ func (server *Server) setupRoutes() {
 	subrouter := server.router.PathPrefix("/api/v1").Subrouter()
 	// PCs
 	subrouter.HandleFunc("/pcs", server.createPC).Methods(http.MethodPost)
-	// page number and how many per page
+	// limit = how many entries per page
 	subrouter.HandleFunc("/pcs/{page_number}/{limit}", server.getPCS).Methods(http.MethodGet)
+	// get a pc
 	subrouter.HandleFunc("/pcs/{link_id}", server.getPC).Methods(http.MethodGet)
+	// update a pc
+	subrouter.HandleFunc("/pcs/{link_id}", server.updatePC).Methods(http.MethodPut)
 
 	// Website
 

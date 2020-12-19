@@ -1,6 +1,8 @@
 package main
 
 import (
+	"database/sql"
+
 	"github.com/jmoiron/sqlx"
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -208,4 +210,80 @@ func (database *Database) getPC(linkID string) (PC, error) {
 	}
 
 	return pc, nil
+}
+
+func (database *Database) updatePC(linkID string, updatedPC PC) (PC, error) {
+	var pc PC
+
+	// get the pc id
+	query := `SELECT pc_id
+			 FROM link WHERE link_id = $1
+			 AND permission = "edit"; `
+
+	err := database.Get(&(updatedPC.PCID), query, linkID)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return pc, err
+		}
+		return pc, err
+	}
+
+	// begin transaction since multiple updates
+	tx, err := database.Beginx()
+	if err != nil {
+		return pc, err
+	}
+
+	// update the PC name and info
+	query = `UPDATE pc SET name = ?, info = ?
+			 WHERE pc_id = ?;`
+	_, err = tx.Exec(query, updatedPC.Name, updatedPC.Info, updatedPC.PCID)
+	if err != nil {
+		tx.Rollback()
+		return pc, err
+	}
+
+	// delete the previous parts
+	query = `DELETE FROM part WHERE pc_id IN (SELECT pc_id
+		FROM link WHERE link_id = ? AND permission = "edit");`
+	_, err = tx.Exec(query, linkID)
+	if err != nil {
+		tx.Rollback()
+		return pc, err
+	}
+
+	// add new parts
+	for _, part := range pc.Parts {
+		query = `INSERT INTO part
+				 (type, brand, model, qty, pc_id)
+				 VALUES (?, ?, ?, ?, ?);`
+		_, err = tx.Exec(query, part.Type, part.Brand, part.Qty, pc.PCID)
+		if err != nil {
+			tx.Rollback()
+			return pc, err
+		}
+	}
+
+	// delete the previous images
+	query = `DELETE FROM image WHERE pc_id IN (SELECT pc_id
+		FROM link WHERE link_id = ? AND permission = "edit");`
+	_, err = tx.Exec(query, linkID)
+	if err != nil {
+		tx.Rollback()
+		return pc, err
+	}
+
+	// add new images
+	for _, image := range pc.Images {
+		query = `INSERT INTO image
+				(link, pc_id) VALUES (?, ?);`
+		_, err = tx.Exec(query, image.Link, pc.PCID)
+		if err != nil {
+			tx.Rollback()
+			return pc, err
+		}
+	}
+
+	tx.Commit()
+	return updatedPC, nil
 }
