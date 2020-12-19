@@ -29,7 +29,7 @@ func (server *Server) createPC(writer http.ResponseWriter, request *http.Request
 	}
 
 	// Add to the db
-	links, err := server.db.addPC(pc)
+	links, err := server.db.AddPC(pc)
 	if err != nil {
 		http.Error(writer, err.Error(), http.StatusBadRequest)
 		return
@@ -57,7 +57,7 @@ func (server *Server) getPCS(writer http.ResponseWriter, request *http.Request) 
 		return
 	}
 
-	pcs, err := server.db.getPCS(oID, limit)
+	pcs, err := server.db.GetPCS(oID, limit)
 
 	if err != nil {
 		http.Error(writer, err.Error(), http.StatusInternalServerError)
@@ -80,7 +80,7 @@ func (server *Server) getPC(writer http.ResponseWriter, request *http.Request) {
 	linkID := mux.Vars(request)["link_id"]
 
 	// Get PC from db
-	pc, err := server.db.getPC(linkID)
+	pc, err := server.db.GetPC(linkID)
 
 	if err != nil {
 		http.Error(writer, err.Error(), http.StatusBadRequest)
@@ -113,7 +113,7 @@ func (server *Server) updatePC(writer http.ResponseWriter, request *http.Request
 	}
 
 	// update the pc in db
-	pc, err = server.db.updatePC(linkID, pc)
+	pc, err = server.db.UpdatePC(linkID, pc)
 
 	if err != nil {
 		// Cannot edit with view link
@@ -140,7 +140,7 @@ func (server *Server) deletePC(writer http.ResponseWriter, request *http.Request
 	linkID := mux.Vars(request)["link_id"]
 
 	// delete pc from db
-	err := server.db.deletePC(linkID)
+	err := server.db.DeletePC(linkID)
 
 	if err != nil {
 		// not edit link

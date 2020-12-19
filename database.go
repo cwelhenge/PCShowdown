@@ -62,7 +62,9 @@ func ConnectToDB() (*Database, error) {
 	return &Database{db}, err
 }
 
-func (database *Database) addPC(pc PC) (Links, error) {
+// AddPC adds a PC to the database
+// returns links and error
+func (database *Database) AddPC(pc PC) (Links, error) {
 	var links Links
 
 	// Start transaction due to multiple items
@@ -120,7 +122,7 @@ func (database *Database) addPC(pc PC) (Links, error) {
 }
 
 // createLinks creates a view and edit link
-// Returns a Links, edit and view link and error
+// returns a Links, edit and view link and error
 func (database *Database) createLinks(tx *sqlx.Tx, pcID int64) (Links, error) {
 	var links Links
 
@@ -151,8 +153,9 @@ func (database *Database) createLinks(tx *sqlx.Tx, pcID int64) (Links, error) {
 	return links, nil
 }
 
-// getPCs gets all the PCs at a range
-func (database *Database) getPCS(oldID int, limit int) ([]PCList, error) {
+// GetPCS gets all the PCs at a range
+// Returns a list of pcs and error
+func (database *Database) GetPCS(oldID int, limit int) ([]PCList, error) {
 	var pcs []PCList
 
 	query := `SELECT name, info
@@ -170,8 +173,9 @@ func (database *Database) getPCS(oldID int, limit int) ([]PCList, error) {
 	return pcs, nil
 }
 
-// getPCs gets all the PCs at a range
-func (database *Database) getPC(linkID string) (PC, error) {
+// GetPC gets a pc belong to given link id
+// Returns a pc and an error
+func (database *Database) GetPC(linkID string) (PC, error) {
 	var pc PC
 
 	// get the pc name and info
@@ -210,7 +214,9 @@ func (database *Database) getPC(linkID string) (PC, error) {
 	return pc, nil
 }
 
-func (database *Database) updatePC(linkID string, updatedPC PC) (PC, error) {
+// UpdatePC updates a PC with new info
+// returns updated pc and an error
+func (database *Database) UpdatePC(linkID string, updatedPC PC) (PC, error) {
 	var pc PC
 
 	// get the pc id
@@ -283,9 +289,9 @@ func (database *Database) updatePC(linkID string, updatedPC PC) (PC, error) {
 	return updatedPC, nil
 }
 
-// deletePC deletes pc for given link from db
+// DeletePC deletes pc for given link from db
 // Returns error
-func (database *Database) deletePC(linkID string) error {
+func (database *Database) DeletePC(linkID string) error {
 
 	query := `DELETE FROM pc WHERE pc_id IN
 			 (SELECT pc_id FROM link WHERE
