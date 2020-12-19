@@ -1,0 +1,7 @@
+{
+    "name": "pcshowdown",
+    "version": "1.0.0",
+    "devDependencies": {
+        "handlebars": "^4.7.6"
+    }
+}

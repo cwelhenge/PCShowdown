@@ -10,6 +10,6 @@ func main() {
 	}
 
 	server := Server{db: database}
-	server.StartServer(":8000")
+	server.StartServer(":1337")
 
 }

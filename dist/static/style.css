@@ -1,0 +1,32 @@
+.navbar {
+  width: 100%;
+  display: flex;
+}
+
+.navbar a {
+  text-align: center;
+  width: 50%;
+  padding: 0.4%;
+  font-size: 1em;
+  text-decoration: none;
+  color: #eaefd3;
+  background-color: #27233a;
+  transition: 0.7s;
+}
+
+.navbar a:hover {
+  background-color: #505168;
+  transition: 0.7s;
+}
+
+body {
+  background-color: #b3c0a4;
+}
+
+footer {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+}
+
+/* color pallet https://coolors.co/dcc48e-eaefd3-b3c0a4-505168-27233a */

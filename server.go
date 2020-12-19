@@ -72,7 +72,6 @@ func (server *Server) getPCS(writer http.ResponseWriter, request *http.Request) 
 		http.Error(writer, err.Error(), http.StatusInternalServerError)
 		return
 	}
-
 }
 
 // getPCs gets all PCs
