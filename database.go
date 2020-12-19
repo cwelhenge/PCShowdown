@@ -1,8 +1,6 @@
 package main
 
 import (
-	"database/sql"
-
 	"github.com/jmoiron/sqlx"
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -222,9 +220,6 @@ func (database *Database) updatePC(linkID string, updatedPC PC) (PC, error) {
 
 	err := database.Get(&(updatedPC.PCID), query, linkID)
 	if err != nil {
-		if err == sql.ErrNoRows {
-			return pc, err
-		}
 		return pc, err
 	}
 
@@ -286,4 +281,19 @@ func (database *Database) updatePC(linkID string, updatedPC PC) (PC, error) {
 
 	tx.Commit()
 	return updatedPC, nil
+}
+
+// deletePC deletes pc for given link from db
+// Returns error
+func (database *Database) deletePC(linkID string) error {
+
+	query := `DELETE FROM pc WHERE pc_id IN
+			 (SELECT pc_id FROM link WHERE
+			 link_id = ? AND permission = "edit");`
+
+	_, err := database.Exec(query, linkID)
+	if err != nil {
+		return err
+	}
+	return nil
 }

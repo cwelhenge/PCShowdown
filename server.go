@@ -1,6 +1,7 @@
 package main
 
 import (
+	"database/sql"
 	"encoding/json"
 	"log"
 	"net/http"
@@ -115,6 +116,11 @@ func (server *Server) updatePC(writer http.ResponseWriter, request *http.Request
 	pc, err = server.db.updatePC(linkID, pc)
 
 	if err != nil {
+		// Cannot edit with view link
+		if err == sql.ErrNoRows {
+			http.Error(writer, err.Error(), http.StatusForbidden)
+			return
+		}
 		http.Error(writer, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -125,6 +131,23 @@ func (server *Server) updatePC(writer http.ResponseWriter, request *http.Request
 	err = encoder.Encode(pc)
 
 	if err != nil {
+		http.Error(writer, err.Error(), http.StatusInternalServerError)
+		return
+	}
+}
+func (server *Server) deletePC(writer http.ResponseWriter, request *http.Request) {
+
+	linkID := mux.Vars(request)["link_id"]
+
+	// delete pc from db
+	err := server.db.deletePC(linkID)
+
+	if err != nil {
+		// not edit link
+		if err == sql.ErrNoRows {
+			http.Error(writer, err.Error(), http.StatusForbidden)
+			return
+		}
 		http.Error(writer, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -148,6 +171,8 @@ func (server *Server) setupRoutes() {
 	subrouter.HandleFunc("/pcs/{link_id}", server.getPC).Methods(http.MethodGet)
 	// update a pc
 	subrouter.HandleFunc("/pcs/{link_id}", server.updatePC).Methods(http.MethodPut)
+	// delete a pc
+	subrouter.HandleFunc("/pcs/{link_id}", server.deletePC).Methods(http.MethodDelete)
 
 	// Website
 

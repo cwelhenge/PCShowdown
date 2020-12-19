@@ -4,7 +4,7 @@
 CREATE TABLE IF NOT EXISTS link (
     link_id TEXT PRIMARY KEY DEFAULT (SUBSTR(LOWER(HEX(RANDOMBLOB(16))), 0, 6)),
     permission TEXT NOT NULL CHECK(permission IN("edit", "view")),
-    pc_id INTEGER NOT NULL REFERENCES pc(pc_id)
+    pc_id INTEGER NOT NULL REFERENCES pc(pc_id) ON DELETE CASCADE
 );
 -- info about the pc
 CREATE TABLE IF NOT EXISTS pc (
@@ -31,12 +31,12 @@ CREATE TABLE IF NOT EXISTS part(
     brand TEXT NOT NULL,
     model TEXT NOT NULL,
     qty INTEGER NOT NULL,
-    pc_id INTEGER NOT NULL REFERENCES pc(pc_id)
+    pc_id INTEGER NOT NULL REFERENCES pc(pc_id) ON DELETE CASCADE
 );
 -- images of a PC
 CREATE TABLE IF NOT EXISTS image(
     image_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    pc_id INTEGER NOT NULL REFERENCES pc(pc_id),
+    pc_id INTEGER NOT NULL REFERENCES pc(pc_id) ON DELETE CASCADE,
     link TEXT NOT NULL
 );
 -- Creating indices
