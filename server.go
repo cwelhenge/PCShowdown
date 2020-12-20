@@ -1,3 +1,7 @@
+// Description: Responds to client requests to the server.
+//
+// Author: Chamod
+
 package main
 
 import (

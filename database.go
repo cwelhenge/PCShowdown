@@ -1,3 +1,8 @@
+// Description: Interacts with the sqlite3 database
+//				by running query's and returning results.
+//
+// Author: Chamod
+
 package main
 
 import (

@@ -1,3 +1,8 @@
+// Description: Interacts with database.go and server.go
+//				to connect to database and start the server.
+//
+// Author: Chamod
+
 package main
 
 import "log"
