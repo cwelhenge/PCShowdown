@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+
+  <script id="pc-specs-templ" type="text/x-handlebars-template">
+      <div class="part">
+      <div>
+        <label for="type">
+          Type
+        </label>
+        <select name="type" class="type">
+          <option value="cpu">
+            CPU
+          </option>
+          <option value="gpu">
+            GPU
+          </option>
+          <option value="mobo">
+            MOBO
+          </option>
+          <option value="psu">
+            PSU
+          </option>
+          <option value="ram">
+            RAM
+          </option>
+          <option value="disk">
+            Disk
+          </option>
+          <option value="case">
+            Case
+          </option>
+          <option value="cooler">
+            Cooler
+          </option>
+          <option value="other">
+            Other
+          </option>
+        </select>
+      </div>
+      <div>
+        <label for="brand">
+          Brand
+        </label>
+        <textarea name="brand" class="brand" cols="30" rows="1" required="required"></textarea>
+      </div>
+      <div>
+        <label for="model">
+          Model
+        </label>
+        <textarea name="model" class="model" cols="30" rows="1" required="required"></textarea>
+      </div>
+      <div>
+      <label for="qty">
+        Quantity
+      </label>
+      <input type="number" name="qty" class="qty" min="1" step="1" value="1"required="required"/>
+    </div>
+    <button type="button">Remove Part</button>
+    </div>
+    </script>
+
+  <title>PCShowdown - Add PC</title>
+</head>
+
+<body>
+  <header>
+    <nav class="navbar">
+      <a href="/">Home</a>
+      <a href="/addpc">Add PC</a>
+      <a href="#">Browse PCs</a>
+    </nav>
+  </header>
+
+  <form>
+    <!-- name and info -->
+    <label for="name">Name</label>
+    <textarea name="name" id="name" cols="30" rows="1" required="required"></textarea>
+    <label for="info">Info</label>
+    <textarea name="info" id="info" cols="30" rows="10" required="required"></textarea>
+
+    <!-- pc specs -->
+    <div id="pc-specs"></div>
+    <button type="button" id="add-part">Add Part</button>
+
+    <!-- pc images -->
+    <div id="pc-images"></div>
+
+    <!-- buttons -->
+    <button type="button" id="submit">Submit PC</button>
+    <button type="button" id="reset">Reset Form</button>
+  </form>
+
+
+  <footer><small>&copy; Copyright Chamod</small></footer>
+  <script src="./handlebars.js"></script>
+  <script src="./addpc.js"></script>
+</body>
+
+</html>

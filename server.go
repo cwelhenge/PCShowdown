@@ -152,15 +152,20 @@ func (server *Server) deletePC(writer http.ResponseWriter, request *http.Request
 	}
 }
 
+func (server *Server) getAddPCPage(writer http.ResponseWriter, request *http.Request) {
+	http.ServeFile(writer, request, "./dist/static/addpc.html")
+}
+
 // setupRoutes sets up routes for the router
 func (server *Server) setupRoutes() {
 	if server.router == nil {
 		log.Fatalln("Router is not initialized.")
 	}
 
+	server.router.StrictSlash(true)
+
 	// API
 
-	server.router.StrictSlash(true)
 	subrouter := server.router.PathPrefix("/api/v1").Subrouter()
 	// PCs
 	subrouter.HandleFunc("/pcs", server.createPC).Methods(http.MethodPost)
@@ -175,9 +180,8 @@ func (server *Server) setupRoutes() {
 
 	// Website
 
-	// server.router.HandleFunc("/", getHomePage).Methods(http.MethodGet)
-	server.router.PathPrefix("/").Handler(http.FileServer(http.Dir("./dist/static")))
-	server.router.Handle("/", http.StripPrefix("/", http.FileServer(http.Dir("./dist/static"))))
+	server.router.Path("/addpc").Methods(http.MethodGet).HandlerFunc(server.getAddPCPage)
+	server.router.PathPrefix("/").Methods(http.MethodGet).Handler(http.FileServer(http.Dir("./dist/static")))
 
 }
 
