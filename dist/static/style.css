@@ -56,3 +56,7 @@ form {
 .qty {
   width: 3rem;
 }
+
+.image-link {
+  resize: none;
+}

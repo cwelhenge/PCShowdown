@@ -8,13 +8,14 @@
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
 
+  <!-- Template for a new part -->
   <script id="pc-specs-templ" type="text/x-handlebars-template">
       <div class="part">
       <div>
-        <label for="type">
+        <label for="type{{id}}">
           Type
         </label>
-        <select name="type" class="type">
+        <select name="type" class="type" id="type{{id}}">
           <option value="cpu">
             CPU
           </option>
@@ -45,25 +46,36 @@
         </select>
       </div>
       <div>
-        <label for="brand">
+        <label for="brand{{id}}">
           Brand
         </label>
-        <textarea name="brand" class="brand" cols="30" rows="1" required="required"></textarea>
+        <textarea name="brand" class="brand" id="brand{{id}}" cols="30" rows="1" required="required"></textarea>
       </div>
       <div>
-        <label for="model">
+        <label for="model{{id}}">
           Model
         </label>
-        <textarea name="model" class="model" cols="30" rows="1" required="required"></textarea>
+        <textarea name="model" class="model" id="model{{id}}" cols="30" rows="1" required="required"></textarea>
       </div>
       <div>
-      <label for="qty">
+      <label for="qty{{id}}">
         Quantity
       </label>
-      <input type="number" name="qty" class="qty" min="1" step="1" value="1"required="required"/>
+      <input type="number" name="qty" id="qty{{id}}" class="qty" min="1" step="1" value="1"required="required"/>
     </div>
     <button type="button">Remove Part</button>
     </div>
+    </script>
+
+  <!--  Template for a new image link -->
+  <script id="pc-images-templ" type="text/x-handlebars-template">
+    <div class="image">
+      <label for="image{{id}}">
+        Image Link
+      </label>
+      <textarea name="image" class="image-link" id="image{{id}}" cols="30" rows="1" required="required"></textarea>
+  <button type="button">Remove Image</button>
+</div>
     </script>
 
   <title>PCShowdown - Add PC</title>
@@ -91,9 +103,11 @@
 
     <!-- pc images -->
     <div id="pc-images"></div>
+    <button type="button" id="add-image">Add Image</button>
 
     <!-- buttons -->
     <button type="button" id="submit">Submit PC</button>
+    <!-- TODO REMOVE THIS BUTTON -->
     <button type="button" id="reset">Reset Form</button>
   </form>
 
