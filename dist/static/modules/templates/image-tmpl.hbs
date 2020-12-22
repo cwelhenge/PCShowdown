@@ -3,6 +3,9 @@
     <label for="image{{id}}">
         Image Link
     </label>
-    <textarea name="image" class="image-link" id="image{{id}}" cols="30" rows="1" required="required"></textarea>
+    <textarea name="image" class="image-link" id="image{{id}}" cols="30" rows="1"
+        required="required">{{link}}</textarea>
+    {{#if links.editId}}
     <button type="button">Remove Image</button>
+    {{/if}}
 </div>

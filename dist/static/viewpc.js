@@ -1,5 +1,4 @@
-import { addEventsToPartsImages, onDeletePartClick, } from "./modules/pc-module.js";
-let viewPcId = 1;
+import { addEventsToPartsImages, onAddImageClick, onAddSpecClick, } from "./modules/pc-module.js";
 function viewPc() {
     addEventsToPartsImages();
     getPc(window.location.pathname.split("/")[2]);
@@ -21,22 +20,10 @@ function getPcInfo() {
 }
 function populatePcInfo(pc) {
     for (const part of pc.parts) {
-        lolTest(part, pc.links);
+        onAddSpecClick(part, pc.links);
     }
-}
-function lolTest(part, links) {
-    $.get(window.location.origin + "/pc-part-tmpl.hbs", function (data) {
-        const template = Handlebars.compile(data);
-        document
-            .querySelector("#pc-specs")
-            .insertAdjacentHTML("beforeend", template({ id: globalThis.id, part: part, links: links }));
-        let typeElm = document.querySelector("#type" + globalThis.id);
-        typeElm.value = part.type;
-        globalThis.id++;
-        document
-            .querySelectorAll(".part")
-            .forEach((element) => element.querySelector("button")
-            .addEventListener("click", onDeletePartClick));
-    }, "html");
+    for (const image of pc.images) {
+        onAddImageClick(image.link, pc.links);
+    }
 }
 window.addEventListener("DOMContentLoaded", viewPc);

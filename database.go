@@ -40,7 +40,7 @@ type PC struct {
 	PCID   int     `json:"pcId,omitempty" db:"pc_id"`
 	Name   string  `json:"name,omitempty" db:"name"`
 	Info   string  `json:"info,omitempty" db:"info"`
-	Parts  []Part  `json:"parts,omitempty" db:"parts"`
+	Parts  []Part  `json:"parts" db:"parts"`
 	Images []Image `json:"images" db:"images"`
 	Links  Links   `json:"links"`
 }
