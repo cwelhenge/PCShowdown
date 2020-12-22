@@ -1,52 +1,49 @@
+import { addEventsToPartsImages } from "./modules/pc-module.js";
+
 // Global id coutner for ids for elements
-let id = 1;
+
 
 /**
  * main function handles when DOM loaded
  */
-function main() {
+function addpc() {
   document
     .querySelector("#submit")
     .addEventListener("click", onSubmitButtonClick);
   document
     .querySelector("#reset")
     .addEventListener("click", onResetButtonClick);
-  document.querySelector("#add-part").addEventListener("click", onAddSpecClick);
-  document
-    .querySelector("#add-image")
-    .addEventListener("click", onAddImageClick);
-  // Source: https://stackoverflow.com/a/63104461
-  document.addEventListener("keyup", function (event) {
-    // Number 13 is the "Enter" key on the keyboard
-    if (event.key === "Enter") {
-      // Cancel the default action, if needed
-      event.preventDefault();
-      // Trigger the button element with a click
-      onSubmitButtonClick();
-    }
-  });
+  addEventsToPartsImages();
+
 }
 
 /**
- * TODO add comments
+ * Get the user-entered pc specs and
+ * submit a request to API
  */
 function onSubmitButtonClick() {
   let pc = validateAndReturn();
   if (pc != null) {
     let client: XMLHttpRequest = new XMLHttpRequest();
-    client.onload = handler;
+    client.onload = submitPcInfo;
     client.open("POST", window.location.origin + "/api/v1/pcs");
     client.send(JSON.stringify(pc));
+  }
+  else {
+
+    // TODO DO ERROR
   }
 }
 
 // Source: https://xhr.spec.whatwg.org/
-function handler(this: XMLHttpRequest) {
+function submitPcInfo(this: XMLHttpRequest) {
   if (this.status == 200) {
     // success!
+    // TODO LOAD TO NEW PAGE
     console.log(this.response);
 
   } else {
+    //TODO ERROR
     console.log("Request unsuccess.");
   }
 }
@@ -168,63 +165,4 @@ function onResetButtonClick() {
   form.reset();
 }
 
-/**
- * Remove a part given the remove button event
- * @param event Event associated with the click
- */
-function onDeletePartClick(event: any) {
-  // get parent part of the remove button
-  let part: HTMLDivElement = event.target.parentElement;
-  part.remove();
-}
-/**
- * Adds a part to the pc specs area
- */
-function onAddSpecClick() {
-  let templateInfo = document.querySelector("#pc-specs-templ").innerHTML;
-  let template = Handlebars.compile(templateInfo);
-
-  let data = template({ id: id++ });
-
-  document.querySelector("#pc-specs").insertAdjacentHTML("beforeend", data);
-
-  document
-    .querySelectorAll(".part")
-    .forEach((element) =>
-      element
-        .querySelector("button")
-        .addEventListener("click", onDeletePartClick)
-    );
-}
-
-/**
- * Remove an image given the remove button event
- * @param event Event associated with the click
- */
-function onDeleteImageClick(event: any) {
-  // get parent image of the remove button
-  let image: HTMLDivElement = event.target.parentElement;
-  image.remove();
-}
-
-/**
- * Add image area upon add image button click
- */
-function onAddImageClick() {
-  let templateInfo = document.querySelector("#pc-images-templ").innerHTML;
-  let template = Handlebars.compile(templateInfo);
-
-  let data = template({ id: id++ });
-
-  document.querySelector("#pc-images").insertAdjacentHTML("beforeend", data);
-
-  document
-    .querySelectorAll(".image")
-    .forEach((element) =>
-      element
-        .querySelector("button")
-        .addEventListener("click", onDeleteImageClick)
-    );
-}
-
-window.addEventListener("DOMContentLoaded", main);
+window.addEventListener("DOMContentLoaded", addpc);

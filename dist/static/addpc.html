@@ -8,75 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
 
-  <!-- Template for a new part -->
-  <script id="pc-specs-templ" type="text/x-handlebars-template">
-      <div class="part">
-      <div>
-        <label for="type{{id}}">
-          Type
-        </label>
-        <select name="type" class="type" id="type{{id}}">
-          <option value="cpu">
-            CPU
-          </option>
-          <option value="gpu">
-            GPU
-          </option>
-          <option value="mobo">
-            MOBO
-          </option>
-          <option value="psu">
-            PSU
-          </option>
-          <option value="ram">
-            RAM
-          </option>
-          <option value="disk">
-            Disk
-          </option>
-          <option value="case">
-            Case
-          </option>
-          <option value="cooler">
-            Cooler
-          </option>
-          <option value="other">
-            Other
-          </option>
-        </select>
-      </div>
-      <div>
-        <label for="brand{{id}}">
-          Brand
-        </label>
-        <textarea name="brand" class="brand" id="brand{{id}}" cols="30" rows="1" required="required"></textarea>
-      </div>
-      <div>
-        <label for="model{{id}}">
-          Model
-        </label>
-        <textarea name="model" class="model" id="model{{id}}" cols="30" rows="1" required="required"></textarea>
-      </div>
-      <div>
-      <label for="qty{{id}}">
-        Quantity
-      </label>
-      <input type="number" name="qty" id="qty{{id}}" class="qty" min="1" step="1" value="1"required="required"/>
-    </div>
-    <button type="button">Remove Part</button>
-    </div>
-    </script>
 
-  <!--  Template for a new image link -->
-  <script id="pc-images-templ" type="text/x-handlebars-template">
-    <div class="image">
-      <label for="image{{id}}">
-        Image Link
-      </label>
-      <textarea name="image" class="image-link" id="image{{id}}" cols="30" rows="1" required="required"></textarea>
-  <button type="button">Remove Image</button>
-</div>
-    </script>
 
   <title>PCShowdown - Add PC</title>
 </head>
@@ -113,8 +45,9 @@
 
 
   <footer><small>&copy; Copyright Chamod</small></footer>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="./handlebars.js"></script>
-  <script src="./addpc.js"></script>
+  <script type="module" src="./addpc.js"></script>
 </body>
 
 </html>

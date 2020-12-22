@@ -4,11 +4,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link rel="stylesheet" href="/style.css">
+    <title>PC Showdown - PC {{if .Links.EditID}} {{.Links.EditID }}{{else}} {{.Links.ViewID}} {{end}}
+    </title>
+
 </head>
 
 <body>
+    <header>
+        <nav class="navbar">
+            <a href="/">Home</a>
+            <a href="/addpc">Add PC</a>
+            <a href="/browse">Browse PCs</a>
+        </nav>
+    </header>
 
+
+
+    <form>
+        <!-- name and info -->
+        <label for="name">Name</label>
+        <textarea name="name" id="name" cols="30" rows="1" required="required">{{.Data.Name}}</textarea>
+        <label for="info">Info</label>
+        <textarea name="info" id="info" cols="30" rows="10" required="required">{{.Data.Info}}</textarea>
+
+        <!-- Only add buttons if edit permission -->
+        <!-- pc specs -->
+        <div id="pc-specs"></div>
+        {{if .Links.EditID}}
+        <button type="button" id="add-part">Add Part</button>
+        {{end}}
+        <!-- pc images -->
+        <div id="pc-images"></div>
+        {{if .Links.EditID}}
+        <button type="button" id="add-image">Add Image</button>
+        <button type="button" id="update">Update PC</button>
+        <button type="button" id="delete">Delete PC</button>
+        {{end}}
+    </form>
+
+    <footer><small>&copy; Copyright Chamod</small></footer>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="/handlebars.js"></script>
+    <script type="module" src="/viewpc.js"></script>
 </body>
 
 </html>

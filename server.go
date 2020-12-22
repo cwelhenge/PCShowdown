@@ -7,6 +7,7 @@ package main
 import (
 	"database/sql"
 	"encoding/json"
+	"html/template"
 	"log"
 	"net/http"
 	"strconv"
@@ -19,6 +20,8 @@ type Server struct {
 	router *mux.Router
 	db     *Database
 }
+
+// API functions
 
 // createPC creates a PC and writes back new PC info
 func (server *Server) createPC(writer http.ResponseWriter, request *http.Request) {
@@ -101,6 +104,7 @@ func (server *Server) getPC(writer http.ResponseWriter, request *http.Request) {
 	}
 }
 
+// updatePC updates the pc of given link_id
 func (server *Server) updatePC(writer http.ResponseWriter, request *http.Request) {
 	var pc PC
 
@@ -138,6 +142,8 @@ func (server *Server) updatePC(writer http.ResponseWriter, request *http.Request
 		return
 	}
 }
+
+// deletePC delete the pc of given pc id
 func (server *Server) deletePC(writer http.ResponseWriter, request *http.Request) {
 
 	linkID := mux.Vars(request)["link_id"]
@@ -156,8 +162,50 @@ func (server *Server) deletePC(writer http.ResponseWriter, request *http.Request
 	}
 }
 
+// Website functions
+
+// getAddPCPage Gets home page
+func (server *Server) getHomePage(writer http.ResponseWriter, request *http.Request) {
+	http.ServeFile(writer, request, "./dist/static/index.html")
+}
+
+// getAddPCPage Gets the page to submit a pc
 func (server *Server) getAddPCPage(writer http.ResponseWriter, request *http.Request) {
 	http.ServeFile(writer, request, "./dist/static/addpc.html")
+}
+
+// getPCPage Gets the page of a pc
+func (server *Server) getPCPage(writer http.ResponseWriter, request *http.Request) {
+	linkID := mux.Vars(request)["link_id"]
+
+	// Get links from db
+	links, err := server.db.GetLinks(linkID)
+
+	if err != nil {
+		// no rows, mean bad id
+		if err == sql.ErrNoRows {
+			http.Error(writer, err.Error(), http.StatusBadRequest)
+			return
+		}
+		http.Error(writer, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	data, err := server.db.GetPC(linkID)
+	if err != nil {
+		// no rows, mean bad id
+		if err == sql.ErrNoRows {
+			http.Error(writer, err.Error(), http.StatusBadRequest)
+			return
+		}
+		http.Error(writer, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	// Execute template
+	tmpl := template.Must(template.ParseFiles("./dist/viewpc.html"))
+	tmpl.ExecuteTemplate(writer, "viewpc.html", map[string]interface{}{"Links": links,
+		"Data": data})
 }
 
 // setupRoutes sets up routes for the router
@@ -184,9 +232,10 @@ func (server *Server) setupRoutes() {
 
 	// Website
 
+	server.router.Path("/").Methods(http.MethodGet).HandlerFunc(server.getHomePage)
+	server.router.Path("/pcs/{link_id}").Methods(http.MethodGet).HandlerFunc(server.getPCPage)
 	server.router.Path("/addpc").Methods(http.MethodGet).HandlerFunc(server.getAddPCPage)
 	server.router.PathPrefix("/").Methods(http.MethodGet).Handler(http.FileServer(http.Dir("./dist/static")))
-
 }
 
 // initializeServer initializes server components

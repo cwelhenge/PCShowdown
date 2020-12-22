@@ -1,33 +1,25 @@
-"use strict";
-let id = 1;
-function main() {
+import { addEventsToPartsImages } from "./modules/pc-module.js";
+function addpc() {
     document
         .querySelector("#submit")
         .addEventListener("click", onSubmitButtonClick);
     document
         .querySelector("#reset")
         .addEventListener("click", onResetButtonClick);
-    document.querySelector("#add-part").addEventListener("click", onAddSpecClick);
-    document
-        .querySelector("#add-image")
-        .addEventListener("click", onAddImageClick);
-    document.addEventListener("keyup", function (event) {
-        if (event.key === "Enter") {
-            event.preventDefault();
-            onSubmitButtonClick();
-        }
-    });
+    addEventsToPartsImages();
 }
 function onSubmitButtonClick() {
     let pc = validateAndReturn();
     if (pc != null) {
         let client = new XMLHttpRequest();
-        client.onload = handler;
+        client.onload = submitPcInfo;
         client.open("POST", window.location.origin + "/api/v1/pcs");
         client.send(JSON.stringify(pc));
     }
+    else {
+    }
 }
-function handler() {
+function submitPcInfo() {
     if (this.status == 200) {
         console.log(this.response);
     }
@@ -107,34 +99,4 @@ function onResetButtonClick() {
     let form = document.querySelector("form");
     form.reset();
 }
-function onDeletePartClick(event) {
-    let part = event.target.parentElement;
-    part.remove();
-}
-function onAddSpecClick() {
-    let templateInfo = document.querySelector("#pc-specs-templ").innerHTML;
-    let template = Handlebars.compile(templateInfo);
-    let data = template({ id: id++ });
-    document.querySelector("#pc-specs").insertAdjacentHTML("beforeend", data);
-    document
-        .querySelectorAll(".part")
-        .forEach((element) => element
-        .querySelector("button")
-        .addEventListener("click", onDeletePartClick));
-}
-function onDeleteImageClick(event) {
-    let image = event.target.parentElement;
-    image.remove();
-}
-function onAddImageClick() {
-    let templateInfo = document.querySelector("#pc-images-templ").innerHTML;
-    let template = Handlebars.compile(templateInfo);
-    let data = template({ id: id++ });
-    document.querySelector("#pc-images").insertAdjacentHTML("beforeend", data);
-    document
-        .querySelectorAll(".image")
-        .forEach((element) => element
-        .querySelector("button")
-        .addEventListener("click", onDeleteImageClick));
-}
-window.addEventListener("DOMContentLoaded", main);
+window.addEventListener("DOMContentLoaded", addpc);

@@ -41,7 +41,8 @@ type PC struct {
 	Name   string  `json:"name,omitempty" db:"name"`
 	Info   string  `json:"info,omitempty" db:"info"`
 	Parts  []Part  `json:"parts,omitempty" db:"parts"`
-	Images []Image `json:"images,omitempty" db:"images"`
+	Images []Image `json:"images" db:"images"`
+	Links  Links   `json:"links"`
 }
 
 // Image contains info of a PC image
@@ -158,6 +159,38 @@ func (database *Database) createLinks(tx *sqlx.Tx, pcID int64) (Links, error) {
 	return links, nil
 }
 
+// GetLinks gets links permitted to the given link
+func (database *Database) GetLinks(linkID string) (Links, error) {
+	var links Links
+	var permission string
+
+	// check for permission
+	query := `SELECT permission FROM link WHERE link_id = ?;`
+	err := database.Get(&permission, query, linkID)
+	if err != nil {
+		return links, err
+	}
+
+	// if edit permission, get view id and return edit and view id
+	if permission == "edit" {
+		query = `SELECT link_id FROM link
+				WHERE permission = "view"
+				AND pc_id IN (SELECT pc_id FROM link
+				WHERE link_id = ? LIMIT 1);`
+		err := database.Get((&links.ViewID), query, linkID)
+		if err != nil {
+			return links, err
+		}
+		links.EditID = linkID
+		return links, nil
+	}
+
+	// else just view id
+	links.ViewID = linkID
+
+	return links, nil
+}
+
 // GetPCS gets all the PCs at a range
 // Returns a list of pcs and error
 func (database *Database) GetPCS(oldID int, limit int) ([]PCList, error) {
@@ -195,7 +228,7 @@ func (database *Database) GetPC(linkID string) (PC, error) {
 	}
 
 	// get all the parts
-	query = `SELECT type, brand, qty FROM part
+	query = `SELECT type, model, brand, qty FROM part
 			 WHERE pc_id IN (SELECT pc_id
 			 FROM link WHERE link_id = ?);`
 
@@ -211,6 +244,13 @@ func (database *Database) GetPC(linkID string) (PC, error) {
 			 FROM link WHERE link_id = ?);`
 
 	err = database.Select(&(pc.Images), query, linkID)
+
+	if err != nil {
+		return pc, err
+	}
+
+	// get links
+	pc.Links, err = database.GetLinks(linkID)
 
 	if err != nil {
 		return pc, err

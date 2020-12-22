@@ -1,0 +1,62 @@
+{{!-- Template for a pc part --}}
+<div class="part">
+    <div>
+        <label for="type{{id}}">
+            Type
+        </label>
+        <select name="type" class="type" id="type{{id}}">
+            <option value="cpu">
+                CPU
+            </option>
+            <option value="gpu">
+                GPU
+            </option>
+            <option value="mobo">
+                MOBO
+            </option>
+            <option value="psu">
+                PSU
+            </option>
+            <option value="ram">
+                RAM
+            </option>
+            <option value="disk">
+                Disk
+            </option>
+            <option value="case">
+                Case
+            </option>
+            <option value="cooler">
+                Cooler
+            </option>
+            <option value="other">
+                Other
+            </option>
+        </select>
+    </div>
+    <div>
+        <label for="brand{{id}}">
+            Brand
+        </label>
+        <textarea name="brand" class="brand" id="brand{{id}}" cols="30" rows="1"
+            required="required">{{part.brand}}</textarea>
+    </div>
+    <div>
+        <label for="model{{id}}">
+            Model
+        </label>
+        <textarea name="model" class="model" id="model{{id}}" cols="30" rows="1"
+            required="required">{{part.model}}</textarea>
+    </div>
+    <div>
+        <label for="qty{{id}}">
+            Quantity
+        </label>
+        <input type="number" name="qty" id="qty{{id}}" class="qty" min="1" step="1" value="{{part.qty}}"
+            required="required" />
+    </div>
+    {{!-- Only allow remove part, if edit permissions --}}
+    {{#if links.editId}}
+    <button type="button">Remove Part</button>
+    {{/if}}
+</div>
