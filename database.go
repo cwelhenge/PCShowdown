@@ -40,8 +40,8 @@ type PC struct {
 	PCID   int     `json:"pcId,omitempty" db:"pc_id"`
 	Name   string  `json:"name,omitempty" db:"name"`
 	Info   string  `json:"info,omitempty" db:"info"`
-	Parts  []Part  `json:"parts" db:"parts"`
-	Images []Image `json:"images" db:"images"`
+	Parts  []Part  `json:"parts"`
+	Images []Image `json:"images"`
 	Links  Links   `json:"links"`
 }
 
@@ -262,22 +262,20 @@ func (database *Database) GetPC(linkID string) (PC, error) {
 // UpdatePC updates a PC with new info
 // returns updated pc and an error
 func (database *Database) UpdatePC(linkID string, updatedPC PC) (PC, error) {
-	var pc PC
-
 	// get the pc id
 	query := `SELECT pc_id
-			 FROM link WHERE link_id = $1
+			 FROM link WHERE link_id = ?
 			 AND permission = "edit"; `
 
 	err := database.Get(&(updatedPC.PCID), query, linkID)
 	if err != nil {
-		return pc, err
+		return updatedPC, err
 	}
 
 	// begin transaction since multiple updates
 	tx, err := database.Beginx()
 	if err != nil {
-		return pc, err
+		return updatedPC, err
 	}
 
 	// update the PC name and info
@@ -286,51 +284,64 @@ func (database *Database) UpdatePC(linkID string, updatedPC PC) (PC, error) {
 	_, err = tx.Exec(query, updatedPC.Name, updatedPC.Info, updatedPC.PCID)
 	if err != nil {
 		tx.Rollback()
-		return pc, err
+		return updatedPC, err
 	}
 
 	// delete the previous parts
-	query = `DELETE FROM part WHERE pc_id IN (SELECT pc_id
-		FROM link WHERE link_id = ? AND permission = "edit");`
-	_, err = tx.Exec(query, linkID)
+	query = `DELETE FROM part WHERE pc_id = ?;`
+	_, err = tx.Exec(query, updatedPC.PCID)
 	if err != nil {
 		tx.Rollback()
-		return pc, err
+		return updatedPC, err
 	}
 
 	// add new parts
-	for _, part := range pc.Parts {
+	for _, part := range updatedPC.Parts {
 		query = `INSERT INTO part
 				 (type, brand, model, qty, pc_id)
 				 VALUES (?, ?, ?, ?, ?);`
-		_, err = tx.Exec(query, part.Type, part.Brand, part.Qty, pc.PCID)
+		_, err = tx.Exec(query, part.Type, part.Brand, part.Model, part.Qty, updatedPC.PCID)
 		if err != nil {
 			tx.Rollback()
-			return pc, err
+			return updatedPC, err
 		}
 	}
 
 	// delete the previous images
-	query = `DELETE FROM image WHERE pc_id IN (SELECT pc_id
-		FROM link WHERE link_id = ? AND permission = "edit");`
-	_, err = tx.Exec(query, linkID)
+	query = `DELETE FROM image WHERE pc_id = ?;`
+	_, err = tx.Exec(query, updatedPC.PCID)
 	if err != nil {
 		tx.Rollback()
-		return pc, err
+		return updatedPC, err
 	}
 
 	// add new images
-	for _, image := range pc.Images {
+	for _, image := range updatedPC.Images {
 		query = `INSERT INTO image
 				(link, pc_id) VALUES (?, ?);`
-		_, err = tx.Exec(query, image.Link, pc.PCID)
+		_, err = tx.Exec(query, image.Link, updatedPC.PCID)
 		if err != nil {
 			tx.Rollback()
-			return pc, err
+			return updatedPC, err
 		}
 	}
 
-	tx.Commit()
+	// commit the updates values
+	err = tx.Commit()
+	if err != nil {
+		tx.Rollback()
+		return updatedPC, err
+	}
+
+	// get the links
+	links, err := database.GetLinks(linkID)
+	if err != nil {
+		return updatedPC, err
+	}
+
+	// set the links
+	updatedPC.Links = links
+
 	return updatedPC, nil
 }
 

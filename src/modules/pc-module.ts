@@ -119,7 +119,7 @@ export function addEventsToPartsImages() {
  * A part object containing part info
  * verify method to check for empty values
  */
-export class Part {
+class Part {
 	type: string;
 	brand: string;
 	model: string;
@@ -135,7 +135,7 @@ export class Part {
 /**
  * Spec object containing PC info
  */
-export class PC {
+class PC {
 	name: string;
 	info: string;
 	parts: Part[];
@@ -170,12 +170,13 @@ export class PC {
 	}
 }
 
-export class ImageLink {
+class ImageLink {
 	link: string;
 }
 
 /**
  * Check for validity and get the values
+ * return null if error
  */
 export function validateAndReturn() {
 	let spec = new PC();

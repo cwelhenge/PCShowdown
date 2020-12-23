@@ -94,7 +94,7 @@ class PC {
         return true;
     }
 }
-export class ImageLink {
+class ImageLink {
 }
 export function validateAndReturn() {
     let spec = new PC();
