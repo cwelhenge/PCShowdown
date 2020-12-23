@@ -4,11 +4,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <title>PCShowdown - Browse PCs</title>
 </head>
 
 <body>
+    <!-- Nav bar -->
+    <nav class="navbar">
+        <a href="/">Home</a>
+        <a href="/addpc">Add PC</a>
+        <a href="/browse">Browse PCs</a>
+    </nav>
 
+    <!-- results  -->
+    <ul id="results"></ul>
+
+    <!-- buttons -->
+    <button id="prev" type="button">Previous</button>
+    <button id="next" type="button">Next</button>
+
+
+
+
+    <footer><small>&copy; Copyright Chamod</small></footer>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="/handlebars.js"></script>
+    <script src="browsepcs.js"></script>
 </body>
 
 </html>

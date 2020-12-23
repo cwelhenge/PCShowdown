@@ -2,6 +2,8 @@ import {
 	addEventsToPartsImages,
 	onAddImageClick,
 	onAddSpecClick,
+	removeError,
+	showError,
 	validateAndReturn,
 } from "./modules/pc-module.js";
 
@@ -25,6 +27,7 @@ function getPc(link_id: string) {
 function onUpdateClick() {
 	const pc = validateAndReturn();
 	if (pc != null) {
+		removeError();
 		let client: XMLHttpRequest = new XMLHttpRequest();
 		client.onload = updatePcInfo;
 		client.open(
@@ -33,32 +36,30 @@ function onUpdateClick() {
 		);
 		client.send(JSON.stringify(pc));
 	} else {
-		// TODO DO ERROR
+		showError();
 	}
 }
 
 // Source: https://xhr.spec.whatwg.org/
 function updatePcInfo(this: XMLHttpRequest) {
 	if (this.status == 200) {
-		// success!
+		removeError();
 		location.assign(
 			window.location.origin + "/pcs/" + JSON.parse(this.response).links.editId
 		);
 	} else {
-		//TODO ERROR
-		console.log("Request unsuccess.");
+		showError();
 	}
 }
 
 // Source: https://xhr.spec.whatwg.org/
 function getPcInfo(this: XMLHttpRequest) {
 	if (this.status == 200) {
+		removeError();
 		const pc = JSON.parse(this.response);
-
 		populatePcInfo(pc);
 	} else {
-		//TODO ERROR
-		console.log("Request unsuccess.");
+		showError();
 	}
 }
 
@@ -69,7 +70,6 @@ function populatePcInfo(pc: any) {
 	}
 	if (pc.images) {
 		for (const image of pc.images) {
-			// addImages(image.link, pc.links)
 			onAddImageClick(image.link, pc.links);
 		}
 	}

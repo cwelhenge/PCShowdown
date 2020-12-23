@@ -208,6 +208,10 @@ func (server *Server) getPCPage(writer http.ResponseWriter, request *http.Reques
 		"Data": data})
 }
 
+func (server *Server) getBrowsePCPage(writer http.ResponseWriter, request *http.Request) {
+	http.ServeFile(writer, request, "./dist/static/browsepcs.html")
+}
+
 // setupRoutes sets up routes for the router
 func (server *Server) setupRoutes() {
 	if server.router == nil {
@@ -235,6 +239,7 @@ func (server *Server) setupRoutes() {
 	server.router.Path("/").Methods(http.MethodGet).HandlerFunc(server.getHomePage)
 	server.router.Path("/pcs/{link_id}").Methods(http.MethodGet).HandlerFunc(server.getPCPage)
 	server.router.Path("/addpc").Methods(http.MethodGet).HandlerFunc(server.getAddPCPage)
+	server.router.Path("/browse").Methods(http.MethodGet).HandlerFunc(server.getBrowsePCPage)
 	server.router.PathPrefix("/").Methods(http.MethodGet).Handler(http.FileServer(http.Dir("./dist/static")))
 }
 

@@ -6,6 +6,8 @@
 package main
 
 import (
+	"log"
+
 	"github.com/jmoiron/sqlx"
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -32,7 +34,7 @@ type Links struct {
 type PCList struct {
 	Name   string `json:"name,omitempty" db:"name"`
 	Info   string `json:"info,omitempty" db:"info"`
-	EditID string `json:"editId,omitempty" db:"link_id"`
+	ViewID string `json:"viewId,omitempty" db:"link_id"`
 }
 
 // PC Info
@@ -196,15 +198,16 @@ func (database *Database) GetLinks(linkID string) (Links, error) {
 func (database *Database) GetPCS(oldID int, limit int) ([]PCList, error) {
 	var pcs []PCList
 
-	query := `SELECT name, info
-			FROM pc
-			WHERE pc_id > ?
-			ORDER BY pc_id ASC
+	query := `SELECT name, info, link_id
+			FROM pc INNER JOIN link ON link.pc_id = pc.pc_id
+			WHERE permission = "view" AND pc.pc_id > ?
+			ORDER BY pc.pc_id ASC
 			LIMIT ?;`
 
 	err := database.Select(&pcs, query, oldID, limit)
 
 	if err != nil {
+		log.Println(err)
 		return nil, err
 	}
 

@@ -1,4 +1,4 @@
-import { addEventsToPartsImages, onAddImageClick, onAddSpecClick, validateAndReturn, } from "./modules/pc-module.js";
+import { addEventsToPartsImages, onAddImageClick, onAddSpecClick, removeError, showError, validateAndReturn, } from "./modules/pc-module.js";
 function viewPc() {
     addEventsToPartsImages();
     const updateButton = document.querySelector("#update");
@@ -16,29 +16,33 @@ function getPc(link_id) {
 function onUpdateClick() {
     const pc = validateAndReturn();
     if (pc != null) {
+        removeError();
         let client = new XMLHttpRequest();
         client.onload = updatePcInfo;
         client.open("PUT", window.location.origin + "/api/v1" + window.location.pathname);
         client.send(JSON.stringify(pc));
     }
     else {
+        showError();
     }
 }
 function updatePcInfo() {
     if (this.status == 200) {
+        removeError();
         location.assign(window.location.origin + "/pcs/" + JSON.parse(this.response).links.editId);
     }
     else {
-        console.log("Request unsuccess.");
+        showError();
     }
 }
 function getPcInfo() {
     if (this.status == 200) {
+        removeError();
         const pc = JSON.parse(this.response);
         populatePcInfo(pc);
     }
     else {
-        console.log("Request unsuccess.");
+        showError();
     }
 }
 function populatePcInfo(pc) {

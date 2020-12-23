@@ -1,4 +1,9 @@
-import { validateAndReturn } from "./modules/pc-module.js";
+import {
+	addEventsToPartsImages,
+	removeError,
+	showError,
+	validateAndReturn,
+} from "./modules/pc-module.js";
 
 // Global id coutner for ids for elements
 
@@ -9,6 +14,7 @@ function addpc() {
 	document
 		.querySelector("#submit")
 		.addEventListener("click", onSubmitButtonClick);
+	addEventsToPartsImages();
 }
 
 /**
@@ -18,25 +24,25 @@ function addpc() {
 function onSubmitButtonClick() {
 	let pc = validateAndReturn();
 	if (pc != null) {
+		removeError();
 		let client: XMLHttpRequest = new XMLHttpRequest();
 		client.onload = submitPcInfo;
 		client.open("POST", window.location.origin + "/api/v1/pcs");
 		client.send(JSON.stringify(pc));
 	} else {
-		// TODO DO ERROR
+		showError();
 	}
 }
 
 // Source: https://xhr.spec.whatwg.org/
 function submitPcInfo(this: XMLHttpRequest) {
 	if (this.status == 200) {
-		// success!
+		removeError();
 		location.assign(
 			window.location.origin + "/pcs/" + JSON.parse(this.response).editId
 		);
 	} else {
-		//TODO ERROR
-		console.log("Request unsuccess.");
+		showError();
 	}
 }
 

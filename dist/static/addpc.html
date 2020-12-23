@@ -7,20 +7,16 @@
   <link rel="stylesheet" href="style.css" />
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
-
-
-
   <title>PCShowdown - Add PC</title>
 </head>
 
 <body>
-  <header>
-    <nav class="navbar">
-      <a href="/">Home</a>
-      <a href="/addpc">Add PC</a>
-      <a href="/browse">Browse PCs</a>
-    </nav>
-  </header>
+
+  <nav class="navbar">
+    <a href="/">Home</a>
+    <a href="/addpc">Add PC</a>
+    <a href="/browse">Browse PCs</a>
+  </nav>
 
   <form>
     <!-- name and info -->
@@ -39,6 +35,12 @@
 
     <!-- buttons -->
     <button type="button" id="submit">Submit PC</button>
+
+    <div id="submit-error" class="hidden">
+      <h2>Error submitting the PC.</h2>
+      <h2>Must fill Name and Info fields.</h2>
+      <h2>Must have the following parts: CPU, Cooler, Mobo, RAM, GPU, Disk, PSU, Case.</h2>
+    </div>
   </form>
 
 

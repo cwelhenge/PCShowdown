@@ -116,7 +116,6 @@ export function validateAndReturn() {
         spec.parts.push(partObj);
     }
     if (!spec.validateParts()) {
-        console.log("Missing required specs.");
         return null;
     }
     let images = form.querySelectorAll(".image-link");
@@ -126,4 +125,18 @@ export function validateAndReturn() {
         spec.images.push(img);
     }
     return spec;
+}
+export function showError() {
+    const error = document.querySelector("#submit-error");
+    if (error) {
+        error.classList.remove("hidden");
+        error.classList.add("show");
+    }
+}
+export function removeError() {
+    const error = document.querySelector("#submit-error");
+    if (error) {
+        error.classList.remove("show");
+        error.classList.add("hidden");
+    }
 }
