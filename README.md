@@ -38,9 +38,9 @@ Install the latest version of NPM
    ```
 2. Install [Goose](https://github.com/pressly/goose)
 
-  ```sh
-  go get -u github.com/pressly/goose/cmd/goose
-  ```
+    ```sh
+    go get -u github.com/pressly/goose/cmd/goose
+    ```
 
 ### Initialization
 
