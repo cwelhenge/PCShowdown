@@ -45,10 +45,14 @@ Install the latest version of NPM
 ### Initialization
 
 Initialize the database
+
+  Go to migrations directory
+  
   ```sh
   cd migrations
   ```
-  
+
+  Initialize the database  
   ```sh
   [goose directory] sqlite3 ../pcshowdown.db up
   ```
