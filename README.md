@@ -1,7 +1,7 @@
 # PCShowdown
 A website that lets users showcase their PCs.
 
-# Technologies used
+## Technologies used
   * [Golang](https://golang.org/) 
   * [TypeScript](https://www.typescriptlang.org/)
   * [jQuery](https://jquery.com/) 
