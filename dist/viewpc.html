@@ -22,11 +22,14 @@
 
     <form>
         <!-- name and info -->
-        <label for="name">Name</label>
-        <textarea name="name" id="name" cols="30" rows="1" required="required">{{.Data.Name}}</textarea>
-        <label for="info">Info</label>
-        <textarea name="info" id="info" cols="30" rows="10" required="required">{{.Data.Info}}</textarea>
-
+        <div id="name-container">
+            <label for="name">Name</label>
+            <textarea name="name" id="name" cols="30" rows="1" required="required">{{.Data.Name}}</textarea>
+        </div>
+        <div id="info-container">
+            <label for="info">Info</label>
+            <textarea name="info" id="info" cols="30" rows="10" required="required">{{.Data.Info}}</textarea>
+        </div>
         <!-- buttons only if edit permission -->
         <!-- pc specs -->
         <div id="pc-specs"></div>
@@ -50,7 +53,9 @@
         {{end}}
     </form>
 
-    <footer><small>&copy; Copyright Chamod</small></footer>
+    <footer>
+        <center>&copy; Copyright Chamod</center>
+    </footer>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="/handlebars.js"></script>
     <script type="module" src="/viewpc.js"></script>

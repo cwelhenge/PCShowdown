@@ -1,4 +1,3 @@
-{{!-- Template for a pc part --}}
 <div class="part">
     <div>
         <label for="type{{id}}">
@@ -52,8 +51,8 @@
         <label for="qty{{id}}">
             Quantity
         </label>
-        <input type="number" name="qty" id="qty{{id}}" class="qty" min="1" step="1" value="{{part.qty}}"
-            required="required" />
+        <input type="number" name="qty" id="qty{{id}}" class="qty" min="1" step="1"
+            value="{{#if part.qty}}{{part.qty}}{{else}}1{{/if}}" required="required" />
     </div>
     {{!-- Only allow remove part, if edit permissions --}}
     {{#if links.editId}}

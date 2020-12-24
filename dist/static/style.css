@@ -22,9 +22,9 @@
 
 .navbar a {
 	text-align: center;
-	width: 50%;
-	padding: 0.4%;
-	font-size: 1em;
+	width: 50em;
+	padding: 0.5em;
+	font-size: 1.5em;
 	text-decoration: none;
 	color: #eaefd3;
 	background-color: #27233a;
@@ -38,33 +38,111 @@
 
 body {
 	background-color: #b3c0a4;
+	padding-bottom: 1.5em;
+	min-height: 100vh;
+	position: relative;
 }
 
 footer {
-	position: fixed;
+	position: absolute;
 	bottom: 0;
-	left: 50%;
+	width: 100%;
+	height: 1.5em;
+}
+
+@media screen and (max-width: 600px) {
+	.navbar {
+		flex-wrap: wrap;
+	}
 }
 
 /* color pallet https://coolors.co/dcc48e-eaefd3-b3c0a4-505168-27233a */
 
-/* Add PC Page */
+/* Home page */
+#home-text {
+	margin-top: 25em;
+	text-align: center;
+}
+#home-text p {
+	font-size: 2em;
+}
+
+/* Add and view pc pages */
 
 form {
-	margin: 1%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	margin: 2em;
 }
 
-.brand,
-.model,
-#name {
-	resize: none;
-	overflow: hidden;
+#name-container textarea,
+#info-container textarea {
+	margin-top: 0.9em;
 }
 
-.qty {
-	width: 3rem;
+#pc-specs > div,
+#pc-images > div {
+	border: 0.1em hotpink solid;
 }
 
-.image-link {
-	resize: none;
+form > div > textarea,
+form > div > input,
+.part {
+	width: 100%;
+}
+
+form div {
+	margin: 0.8em;
+}
+
+form button {
+	width: 8rem;
+	height: 1.5rem;
+	margin: 0.5rem;
+}
+
+form .part {
+	padding: 0.7em;
+	/* display: flex; */
+	align-items: center;
+}
+
+/* Browse PCs page */
+
+#results {
+	display: flex;
+	flex-direction: column;
+	margin: 1em;
+}
+
+li {
+	list-style: none;
+}
+
+.result a {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	border: 0.2em solid #8b9085;
+	background-color: #9caa8c;
+	text-decoration: none;
+	margin: 1em;
+	padding: 1em;
+	border-radius: 0.5em;
+}
+
+.result a div {
+	margin: 0.3em;
+}
+
+.result :hover {
+	background-color: #d2d8ca;
+	transition: 0.7s;
+	color: black;
+}
+
+.browse-but {
+	display: flex;
+	align-items: center;
 }
