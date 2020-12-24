@@ -47,15 +47,16 @@ Install the latest version of NPM
 Initialize the database
 
   Go to migrations directory
-  
-  ```sh
-  cd migrations
-  ```
+
+    ```sh
+    cd migrations
+    ```
 
   Initialize the database  
-  ```sh
-  [goose directory] sqlite3 ../pcshowdown.db up
-  ```
+    
+    ```sh
+    [goose directory] sqlite3 ../pcshowdown.db up
+    ```
 
 Run the go program
 
