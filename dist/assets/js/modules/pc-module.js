@@ -8,7 +8,7 @@ export function onDeletePartClick(event) {
     part.remove();
 }
 export function onAddSpecClick(part, links) {
-    $.get(window.location.origin + "/modules/templates/pc-part-tmpl.hbs", function (data) {
+    $.get(window.location.origin + "/templates/pc-part-tmpl.hbs", function (data) {
         const template = Handlebars.compile(data);
         document
             .querySelector("#pc-specs")
@@ -30,7 +30,7 @@ export function onAddSpecClick(part, links) {
     }, "html");
 }
 export function onAddImageClick(imageLink, links) {
-    $.get(window.location.origin + "/modules/templates/image-tmpl.hbs", function (data) {
+    $.get(window.location.origin + "/templates/image-tmpl.hbs", function (data) {
         const template = Handlebars.compile(data);
         document
             .querySelector("#pc-images")

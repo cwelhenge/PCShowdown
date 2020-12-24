@@ -81,7 +81,7 @@ func (server *Server) getPCS(writer http.ResponseWriter, request *http.Request) 
 	}
 }
 
-// getPCs gets all PCs
+// getPCs gets a PC
 func (server *Server) getPC(writer http.ResponseWriter, request *http.Request) {
 	linkID := mux.Vars(request)["link_id"]
 
@@ -166,12 +166,12 @@ func (server *Server) deletePC(writer http.ResponseWriter, request *http.Request
 
 // getAddPCPage Gets home page
 func (server *Server) getHomePage(writer http.ResponseWriter, request *http.Request) {
-	http.ServeFile(writer, request, "./dist/static/index.html")
+	http.ServeFile(writer, request, "./dist/assets/html/index.html")
 }
 
 // getAddPCPage Gets the page to submit a pc
 func (server *Server) getAddPCPage(writer http.ResponseWriter, request *http.Request) {
-	http.ServeFile(writer, request, "./dist/static/addpc.html")
+	http.ServeFile(writer, request, "./dist/assets/html/addpc.html")
 }
 
 // getPCPage Gets the page of a pc
@@ -184,7 +184,7 @@ func (server *Server) getPCPage(writer http.ResponseWriter, request *http.Reques
 	if err != nil {
 		// no rows, mean bad id
 		if err == sql.ErrNoRows {
-			http.Error(writer, err.Error(), http.StatusBadRequest)
+			http.Error(writer, "pc doesn't exist", http.StatusBadRequest)
 			return
 		}
 		http.Error(writer, err.Error(), http.StatusInternalServerError)
@@ -195,7 +195,7 @@ func (server *Server) getPCPage(writer http.ResponseWriter, request *http.Reques
 	if err != nil {
 		// no rows, mean bad id
 		if err == sql.ErrNoRows {
-			http.Error(writer, err.Error(), http.StatusBadRequest)
+			http.Error(writer, "pc doesn't exist", http.StatusBadRequest)
 			return
 		}
 		http.Error(writer, err.Error(), http.StatusBadRequest)
@@ -203,13 +203,13 @@ func (server *Server) getPCPage(writer http.ResponseWriter, request *http.Reques
 	}
 
 	// Execute template
-	tmpl := template.Must(template.ParseFiles("./dist/viewpc.html"))
+	tmpl := template.Must(template.ParseFiles("./dist/back-tmpl/viewpc.html"))
 	tmpl.ExecuteTemplate(writer, "viewpc.html", map[string]interface{}{"Links": links,
 		"Data": data})
 }
 
 func (server *Server) getBrowsePCPage(writer http.ResponseWriter, request *http.Request) {
-	http.ServeFile(writer, request, "./dist/static/browsepcs.html")
+	http.ServeFile(writer, request, "./dist/assets/html/browsepcs.html")
 }
 
 // setupRoutes sets up routes for the router
@@ -240,7 +240,7 @@ func (server *Server) setupRoutes() {
 	server.router.Path("/pcs/{link_id}").Methods(http.MethodGet).HandlerFunc(server.getPCPage)
 	server.router.Path("/addpc").Methods(http.MethodGet).HandlerFunc(server.getAddPCPage)
 	server.router.Path("/browse").Methods(http.MethodGet).HandlerFunc(server.getBrowsePCPage)
-	server.router.PathPrefix("/").Methods(http.MethodGet).Handler(http.FileServer(http.Dir("./dist/static")))
+	server.router.PathPrefix("/").Methods(http.MethodGet).Handler(http.FileServer(http.Dir("./dist/assets/")))
 }
 
 // initializeServer initializes server components

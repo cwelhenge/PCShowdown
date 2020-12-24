@@ -7,16 +7,26 @@ import {
 	validateAndReturn,
 } from "./modules/pc-module.js";
 
+/**
+ * Adds buttons and initializes the page
+ */
 function viewPc() {
 	addEventsToPartsImages();
-
 	const updateButton = document.querySelector("#update");
-	if (updateButton != null) {
+	if (updateButton) {
 		updateButton.addEventListener("click", onUpdateClick);
+	}
+	const deleteButton = document.querySelector("#delete");
+	if (deleteButton) {
+		deleteButton.addEventListener("click", onDeleteClick);
 	}
 	getPc(window.location.pathname.split("/")[2]);
 }
 
+/**
+ * Gets pc belong to the link
+ * @param link_id link for the pc
+ */
 function getPc(link_id: string) {
 	let client: XMLHttpRequest = new XMLHttpRequest();
 	client.onload = getPcInfo;
@@ -24,6 +34,40 @@ function getPc(link_id: string) {
 	client.send();
 }
 
+/**
+ * Deletes a given pc by calling API
+ */
+function onDeleteClick() {
+	const pc = prompt("Please enter the edit link id to delete the PC", "");
+	if (pc != window.location.pathname.split("/")[2]) {
+		return;
+	}
+	let client: XMLHttpRequest = new XMLHttpRequest();
+	client.onload = deletePc;
+	client.open(
+		"DELETE",
+		window.location.origin + "/api/v1" + window.location.pathname
+	);
+	client.send();
+}
+
+/**
+ * Deletes a given pc
+ * Source: https://xhr.spec.whatwg.org/
+ * @param this request made
+ */
+function deletePc(this: XMLHttpRequest) {
+	if (this.status == 200) {
+		removeError();
+		window.location.replace(window.location.origin);
+	} else {
+		showError();
+	}
+}
+
+/**
+ * Updates the given pc with new info
+ */
 function onUpdateClick() {
 	const pc = validateAndReturn();
 	if (pc != null) {
@@ -40,19 +84,25 @@ function onUpdateClick() {
 	}
 }
 
-// Source: https://xhr.spec.whatwg.org/
+/**
+ * Updates pc and reloads the page
+ * Source: https://xhr.spec.whatwg.org/
+ * @param this xml http request
+ */
 function updatePcInfo(this: XMLHttpRequest) {
 	if (this.status == 200) {
 		removeError();
-		location.assign(
-			window.location.origin + "/pcs/" + JSON.parse(this.response).links.editId
-		);
+		window.location.reload();
 	} else {
 		showError();
 	}
 }
 
-// Source: https://xhr.spec.whatwg.org/
+/**
+ * Gets PC info and populates the page
+ * Source: https://xhr.spec.whatwg.org/
+ * @param this xml http request
+ */
 function getPcInfo(this: XMLHttpRequest) {
 	if (this.status == 200) {
 		removeError();
@@ -63,9 +113,12 @@ function getPcInfo(this: XMLHttpRequest) {
 	}
 }
 
+/**
+ * Populates the page with new pc info
+ * @param pc PC info
+ */
 function populatePcInfo(pc: any) {
 	for (const part of pc.parts) {
-		// lolTest(part, pc.links);
 		onAddSpecClick(part, pc.links);
 	}
 	if (pc.images) {

@@ -30,7 +30,7 @@ export function onDeletePartClick(event: any) {
 export function onAddSpecClick(part: any, links: any) {
 	// get pc-part template and add it to the page
 	$.get(
-		window.location.origin + "/modules/templates/pc-part-tmpl.hbs",
+		window.location.origin + "/templates/pc-part-tmpl.hbs",
 		function (data) {
 			const template = Handlebars.compile(data);
 			// add part
@@ -72,7 +72,7 @@ export function onAddSpecClick(part: any, links: any) {
 export function onAddImageClick(imageLink: any, links: any) {
 	// get pc-image template and add it to the page
 	$.get(
-		window.location.origin + "/modules/templates/image-tmpl.hbs",
+		window.location.origin + "/templates/image-tmpl.hbs",
 		function (data) {
 			const template = Handlebars.compile(data);
 			document

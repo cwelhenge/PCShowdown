@@ -43,7 +43,7 @@ function requestPcResults() {
     }
 }
 function addResult(result) {
-    $.get(window.location.origin + "/modules/templates/result-tmpl.hbs", function (data) {
+    $.get(window.location.origin + "/templates/result-tmpl.hbs", function (data) {
         const template = Handlebars.compile(data);
         document.querySelector("#results").insertAdjacentHTML("beforeend", template({
             link: window.location.origin + "/pcs/" + result.viewId,

@@ -2,8 +2,12 @@ import { addEventsToPartsImages, onAddImageClick, onAddSpecClick, removeError, s
 function viewPc() {
     addEventsToPartsImages();
     const updateButton = document.querySelector("#update");
-    if (updateButton != null) {
+    if (updateButton) {
         updateButton.addEventListener("click", onUpdateClick);
+    }
+    const deleteButton = document.querySelector("#delete");
+    if (deleteButton) {
+        deleteButton.addEventListener("click", onDeleteClick);
     }
     getPc(window.location.pathname.split("/")[2]);
 }
@@ -12,6 +16,25 @@ function getPc(link_id) {
     client.onload = getPcInfo;
     client.open("GET", window.location.origin + "/api/v1/pcs/" + link_id);
     client.send();
+}
+function onDeleteClick() {
+    const pc = prompt("Please enter the edit link id to delete the PC", "");
+    if (pc != window.location.pathname.split("/")[2]) {
+        return;
+    }
+    let client = new XMLHttpRequest();
+    client.onload = deletePc;
+    client.open("DELETE", window.location.origin + "/api/v1" + window.location.pathname);
+    client.send();
+}
+function deletePc() {
+    if (this.status == 200) {
+        removeError();
+        window.location.replace(window.location.origin);
+    }
+    else {
+        showError();
+    }
 }
 function onUpdateClick() {
     const pc = validateAndReturn();
@@ -29,7 +52,7 @@ function onUpdateClick() {
 function updatePcInfo() {
     if (this.status == 200) {
         removeError();
-        location.assign(window.location.origin + "/pcs/" + JSON.parse(this.response).links.editId);
+        window.location.reload();
     }
     else {
         showError();

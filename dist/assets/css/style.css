@@ -26,7 +26,7 @@
 	padding: 0.5em;
 	font-size: 1.5em;
 	text-decoration: none;
-	color: #eaefd3;
+	color: #dcc48e;
 	background-color: #27233a;
 	transition: 0.7s;
 }
@@ -50,18 +50,51 @@ footer {
 	height: 1.5em;
 }
 
+button {
+	transition: 0.7s;
+	background-color: #27233a;
+	color: #dcc48e;
+	font-size: 1em;
+	padding: 0.8em;
+	width: 10em;
+	margin: 1em;
+	border-radius: 0.5em;
+	border: none;
+}
+
+button:hover {
+	background-color: #505168;
+	transition: 0.7s;
+	cursor: pointer;
+}
+
+input,
+textarea,
+select {
+	border-color: #eaefd3;
+	border-radius: 0.2em;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+	outline: none;
+	border-color: #eaefd3;
+	box-shadow: 0 0 1em #dcc48e;
+}
+
 @media screen and (max-width: 600px) {
 	.navbar {
 		flex-wrap: wrap;
 	}
 }
 
-/* color pallet https://coolors.co/dcc48e-eaefd3-b3c0a4-505168-27233a */
-
 /* Home page */
+
 #home-text {
 	margin-top: 25em;
 	text-align: center;
+	color: #505168;
 }
 #home-text p {
 	font-size: 2em;
@@ -76,6 +109,41 @@ form {
 	margin: 2em;
 }
 
+form label,
+form textarea,
+form input,
+form select {
+	font-size: 1.2em;
+}
+label,
+textarea {
+	vertical-align: middle;
+}
+
+#share {
+	margin-top: 0.4em;
+	overflow: hidden;
+	resize: none;
+	height: 1.5em;
+	width: 4em;
+	text-align: center;
+}
+
+.model,
+.brand,
+#name,
+#info {
+	overflow: hidden;
+	resize: none;
+}
+.image-link {
+	resize: none;
+	overflow-y: none;
+}
+#info {
+	overflow: scroll;
+}
+
 #name-container textarea,
 #info-container textarea {
 	margin-top: 0.9em;
@@ -83,9 +151,11 @@ form {
 
 #pc-specs > div,
 #pc-images > div {
-	border: 0.1em hotpink solid;
+	border: 0.1em #dcc48e solid;
 }
-
+#pc-images > div {
+	padding: 1em;
+}
 form > div > textarea,
 form > div > input,
 .part {
@@ -96,15 +166,8 @@ form div {
 	margin: 0.8em;
 }
 
-form button {
-	width: 8rem;
-	height: 1.5rem;
-	margin: 0.5rem;
-}
-
 form .part {
 	padding: 0.7em;
-	/* display: flex; */
 	align-items: center;
 }
 
@@ -124,25 +187,29 @@ li {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	border: 0.2em solid #8b9085;
 	background-color: #9caa8c;
 	text-decoration: none;
 	margin: 1em;
 	padding: 1em;
 	border-radius: 0.5em;
+	transition: 0.7s;
+	color: #27233a;
 }
 
 .result a div {
 	margin: 0.3em;
 }
 
-.result :hover {
-	background-color: #d2d8ca;
+.result a:hover {
+	background-color: #eaefd3;
 	transition: 0.7s;
-	color: black;
+	color: #27233a;
 }
 
-.browse-but {
+.browse-buttons {
 	display: flex;
-	align-items: center;
+	justify-content: center;
+	margin: 1em;
 }
+
+/* color pallet https://coolors.co/dcc48e-eaefd3-b3c0a4-505168-27233a */

@@ -74,7 +74,7 @@ function requestPcResults(this: XMLHttpRequest) {
  */
 function addResult(result: any) {
 	$.get(
-		window.location.origin + "/modules/templates/result-tmpl.hbs",
+		window.location.origin + "/templates/result-tmpl.hbs",
 		function (data) {
 			const template = Handlebars.compile(data);
 			document.querySelector("#results").insertAdjacentHTML(
