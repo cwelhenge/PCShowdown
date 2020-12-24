@@ -22,6 +22,7 @@ A website that lets users showcase their PCs.
 
 Install the latest version of NPM
 * npm
+
   ```sh
   npm install npm@latest -g
   ```
@@ -31,10 +32,12 @@ Install the latest version of NPM
  ### Installation
  
 1. Install NPM packages
+
    ```sh
    npm install
    ```
 2. Install [Goose](https://github.com/pressly/goose)
+
   ```sh
   go get -u github.com/pressly/goose/cmd/goose
   ```
@@ -42,7 +45,7 @@ Install the latest version of NPM
 ### Initialization
 
 Initialize the database
-    ```sh
+  ```sh
   cd migrations
   ```
   
@@ -51,6 +54,7 @@ Initialize the database
   ```
 
 Run the go program
+
   ```sh
   go run .
   ```
