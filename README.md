@@ -1,7 +1,10 @@
 # PCShowdown
 A website that lets users showcase their PCs
 
-## Screenshot
+## Screenshots
+![Screenshot of the app](./screenshots/screenshot1.PNG)
+![Screenshot of the app](./screenshots/screenshot2.PNG)
+![Screenshot of the app](./screenshots/screenshot3.PNG)
 
 ## Usage
 
