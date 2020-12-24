@@ -2,12 +2,11 @@
 A website that lets users showcase their PCs.
 
 # Technologies used
-  Golang
-  TypeScript
-  jQuery
-  Handlebars
-  SQlite3
-
+  * Golang
+  * TypeScript
+  * jQuery
+  * Handlebars
+  * SQlite3
 
 ## Screenshots
 ![Screenshot of the app](./screenshots/screenshot1.PNG)
