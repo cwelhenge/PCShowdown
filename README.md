@@ -3,12 +3,10 @@ A website that lets users add, edit, and remove PCs.
 Users can share links to PCs with others or browse PCs.
 
 ## Technologies used
-  Backend:
-  
+  Backend:<br />
    * [Golang](https://golang.org/) 
    * [SQlite3](https://www.sqlite.org/index.html) 
-  Frontend:
-  
+  Frontend:<br />
    * [TypeScript](https://www.typescriptlang.org/)
    * [jQuery](https://jquery.com/) 
    * [Handlebars](https://handlebarsjs.com/) 
