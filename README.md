@@ -54,18 +54,15 @@ Initialize the database
     ```sh
     cd migrations
     ```
-
-  Initialize the database  
-    
+  Initialize the database
+  
     ```sh
     [goose directory] sqlite3 ../pcshowdown.db up
     ```
-
 Run the go program
 
   ```sh
   go run .
   ```
-
 ## License
 [GNU GPLv3](https://choosealicense.com/licenses/gpl-3.0/)
