@@ -59,9 +59,9 @@ Install the latest version of NPM
     ```
 3. Run the go program
 
-  ```console
-  go run .
-  ```
+    ```console
+    go run .
+    ```
 
 ## License
 [GNU GPLv3](https://choosealicense.com/licenses/gpl-3.0/)
