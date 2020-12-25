@@ -47,22 +47,21 @@ Install the latest version of NPM
 
 ### Initialization
 
-Initialize the database
-
-  Go to migrations directory
+1. Go to migrations directory
 
     ```console
     cd migrations
     ```
-  Initialize the database
+2. Initialize the database
   
     ```console
     [goose directory] sqlite3 ../pcshowdown.db up
     ```
-Run the go program
+3. Run the go program
 
   ```console
   go run .
   ```
+
 ## License
 [GNU GPLv3](https://choosealicense.com/licenses/gpl-3.0/)
