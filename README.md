@@ -26,7 +26,7 @@ Users can share links to PCs with others or browse PCs.
 Install the latest version of NPM
 * npm
 
-  ```sh
+  ```console
   npm install npm@latest -g
   ```
   
@@ -36,12 +36,12 @@ Install the latest version of NPM
  
 1. Install NPM packages
 
-   ```sh
+   ```console
    npm install
    ```
 2. Install [Goose](https://github.com/pressly/goose)
 
-    ```sh
+    ```console
     go get -u github.com/pressly/goose/cmd/goose
     ```
 
@@ -51,17 +51,17 @@ Initialize the database
 
   Go to migrations directory
 
-    ```sh
+    ```console
     cd migrations
     ```
   Initialize the database
   
-    ```sh
+    ```console
     [goose directory] sqlite3 ../pcshowdown.db up
     ```
 Run the go program
 
-  ```sh
+  ```console
   go run .
   ```
 ## License
