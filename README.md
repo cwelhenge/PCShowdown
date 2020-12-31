@@ -1,6 +1,7 @@
 # PCShowdown
 A website that lets users add, edit, and remove PCs. \
-Users can share links to PCs with others or browse PCs.
+Users can share links to PCs with others or browse PCs.\
+Uses a RESTful API to retrieve and accept data.
 
 ## Technologies used
   Backend
