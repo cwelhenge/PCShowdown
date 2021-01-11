@@ -31,14 +31,14 @@ func (server *Server) createPC(writer http.ResponseWriter, request *http.Request
 	decoder.DisallowUnknownFields()
 	err := decoder.Decode(&pc)
 	if err != nil {
-		http.Error(writer, err.Error(), http.StatusBadRequest)
+		writer.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
 	// Add to the db
 	links, err := server.db.AddPC(pc)
 	if err != nil {
-		http.Error(writer, err.Error(), http.StatusBadRequest)
+		writer.WriteHeader(http.StatusBadRequest)
 		return
 	}
 	// Encode the new links as json
@@ -46,7 +46,7 @@ func (server *Server) createPC(writer http.ResponseWriter, request *http.Request
 	encoder := json.NewEncoder(writer)
 	err = encoder.Encode(links)
 	if err != nil {
-		http.Error(writer, err.Error(), http.StatusInternalServerError)
+		writer.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 }
@@ -55,19 +55,19 @@ func (server *Server) createPC(writer http.ResponseWriter, request *http.Request
 func (server *Server) getPCS(writer http.ResponseWriter, request *http.Request) {
 	oID, err := strconv.Atoi(mux.Vars(request)["page_number"])
 	if err != nil {
-		http.Error(writer, err.Error(), http.StatusInternalServerError)
+		writer.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 	limit, err := strconv.Atoi(mux.Vars(request)["limit"])
 	if err != nil {
-		http.Error(writer, err.Error(), http.StatusInternalServerError)
+		writer.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
 	pcs, err := server.db.GetPCS(oID, limit)
 
 	if err != nil {
-		http.Error(writer, err.Error(), http.StatusInternalServerError)
+		writer.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
@@ -76,7 +76,7 @@ func (server *Server) getPCS(writer http.ResponseWriter, request *http.Request) 
 	err = encoder.Encode(pcs)
 
 	if err != nil {
-		http.Error(writer, err.Error(), http.StatusInternalServerError)
+		writer.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 }
@@ -89,7 +89,7 @@ func (server *Server) getPC(writer http.ResponseWriter, request *http.Request) {
 	pc, err := server.db.GetPC(linkID)
 
 	if err != nil {
-		http.Error(writer, err.Error(), http.StatusBadRequest)
+		writer.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
@@ -99,7 +99,7 @@ func (server *Server) getPC(writer http.ResponseWriter, request *http.Request) {
 	err = encoder.Encode(pc)
 
 	if err != nil {
-		http.Error(writer, err.Error(), http.StatusInternalServerError)
+		writer.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 }
@@ -115,7 +115,7 @@ func (server *Server) updatePC(writer http.ResponseWriter, request *http.Request
 	err := decoder.Decode(&pc)
 
 	if pc.Name == "" || pc.Info == "" {
-		http.Error(writer, err.Error(), http.StatusBadRequest)
+		writer.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
@@ -125,10 +125,10 @@ func (server *Server) updatePC(writer http.ResponseWriter, request *http.Request
 	if err != nil {
 		// Cannot edit with view link
 		if err == sql.ErrNoRows {
-			http.Error(writer, err.Error(), http.StatusForbidden)
+			writer.WriteHeader(http.StatusForbidden)
 			return
 		}
-		http.Error(writer, err.Error(), http.StatusInternalServerError)
+		writer.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
@@ -138,7 +138,7 @@ func (server *Server) updatePC(writer http.ResponseWriter, request *http.Request
 	err = encoder.Encode(pc)
 
 	if err != nil {
-		http.Error(writer, err.Error(), http.StatusInternalServerError)
+		writer.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 }
@@ -154,10 +154,10 @@ func (server *Server) deletePC(writer http.ResponseWriter, request *http.Request
 	if err != nil {
 		// not edit link
 		if err == sql.ErrNoRows {
-			http.Error(writer, err.Error(), http.StatusForbidden)
+			writer.WriteHeader(http.StatusForbidden)
 			return
 		}
-		http.Error(writer, err.Error(), http.StatusInternalServerError)
+		writer.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 }
@@ -184,10 +184,10 @@ func (server *Server) getPCPage(writer http.ResponseWriter, request *http.Reques
 	if err != nil {
 		// no rows, mean bad id
 		if err == sql.ErrNoRows {
-			http.Error(writer, "pc doesn't exist", http.StatusBadRequest)
+			writer.WriteHeader(http.StatusBadRequest)
 			return
 		}
-		http.Error(writer, err.Error(), http.StatusInternalServerError)
+		writer.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
@@ -195,10 +195,10 @@ func (server *Server) getPCPage(writer http.ResponseWriter, request *http.Reques
 	if err != nil {
 		// no rows, mean bad id
 		if err == sql.ErrNoRows {
-			http.Error(writer, "pc doesn't exist", http.StatusBadRequest)
+			writer.WriteHeader(http.StatusBadRequest)
 			return
 		}
-		http.Error(writer, err.Error(), http.StatusBadRequest)
+		writer.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
