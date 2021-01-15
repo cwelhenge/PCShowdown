@@ -26,10 +26,9 @@ Uses a RESTful API to retrieve and accept data.
 
 1. Install the latest version of NPM
 
-  ```console
-  npm install npm@latest -g
-  ```
-  
+    ```console
+    npm install npm@latest -g
+    ```
  2. Install the latest version of [Golang](https://golang.org/dl/) 
  
  ### Installation
