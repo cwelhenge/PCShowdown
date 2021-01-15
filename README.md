@@ -24,14 +24,14 @@ Uses a RESTful API to retrieve and accept data.
 
 ### Prerequisites
 
-Install the latest version of NPM
+1. Install the latest version of NPM
 * npm
 
   ```console
   npm install npm@latest -g
   ```
   
- Install the latest version of [Golang](https://golang.org/dl/) 
+ 2. Install the latest version of [Golang](https://golang.org/dl/) 
  
  ### Installation
  
