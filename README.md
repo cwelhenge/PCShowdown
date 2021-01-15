@@ -25,7 +25,6 @@ Uses a RESTful API to retrieve and accept data.
 ### Prerequisites
 
 1. Install the latest version of NPM
-* npm
 
   ```console
   npm install npm@latest -g
