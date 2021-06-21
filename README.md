@@ -66,6 +66,7 @@ Uses a RESTful API to retrieve and accept data.
     ```console
     go run .
     ```
+4. Visit http://localhost:1337 from your web browser.
 
 ## License
 [GNU GPLv3](https://choosealicense.com/licenses/gpl-3.0/)
