@@ -56,6 +56,11 @@ Uses a RESTful API to retrieve and accept data.
     ```console
     [goose directory] sqlite3 ../pcshowdown.db up
     ```
+2. Go back to  main directory
+  
+    ```console
+    cd ..
+    ```    
 3. Run the go program
 
     ```console
